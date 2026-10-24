@@ -1,344 +1,204 @@
-import asyncio
-import logging
-import sqlite3
-import sys
-from aiogram import Bot, Dispatcher, F, types
-from aiogram.filters import Command
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import State, StatesGroup
-from aiogram.fsm.storage.memory import MemoryStorage
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOVITIMECN - Kino Olami</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #6366f1;
+            --text-color: #f8fafc;
+            --text-secondary: #94a3b8;
+        }
 
-# Sizning botingiz tokeni
-API_TOKEN = '8876644496:AAEs6dsbg39ATsoo2-IPOZKtz_OoadRlIT8'
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-# O'z Telegram ID raqamingizni yozing (Admin bo'lish uchun)
-ADMIN_ID = 123456789  # <--- BU YERGA O'Z ID RAQAMINGIZNI YOZING
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding-bottom: 80px; /* Menyu uchun pastdan joy qoldiramiz */
+        }
 
-# Instagram sahifangiz havolasi
-INSTAGRAM_URL = 'https://www.instagram.com/movietimecn?psln=NGJyODU3cGh2dmty'
+        .header {
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
 
-# GitHub Pages orqali olingan Mini App havolangizni bu yerga yozing:
-WEBAPP_URL = 'SIZNING_GITHUB_HAVOLANGIZ'
+        .header h1 {
+            font-size: 24px;
+            color: #38bdf8;
+            margin-bottom: 5px;
+        }
 
-logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+        .header p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
 
-# --- SQLITE BAZASINI YARATISH ---
-def init_db():
-    conn = sqlite3.connect('movies.db')
-    cursor = conn.cursor()
-    
-    # Kinolar jadvali
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS movies (
-            code TEXT PRIMARY KEY,
-            file_id TEXT NOT NULL,
-            caption TEXT
-        )
-    ''')
-    
-    # Multfilmlar jadvali
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS cartoons (
-            code TEXT PRIMARY KEY,
-            file_id TEXT NOT NULL,
-            caption TEXT
-        )
-    ''')
-    
-    # Obuna bo'lgan foydalanuvchilar jadvali
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS users (
-            user_id INTEGER PRIMARY KEY
-        )
-    ''')
-    
-    conn.commit()
-    conn.close()
+        .container {
+            padding: 15px;
+        }
 
-init_db()
+        .section-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-# Kontent qo'shish uchun bosqichlar (FSM)
-class AddContent(StatesGroup):
-    waiting_for_type = State()
-    waiting_for_code = State()
-    waiting_for_video = State()
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
 
-async def main():
-    bot = Bot(token=API_TOKEN)
-    dp = Dispatcher(storage=MemoryStorage())
+        .movie-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
 
-    @dp.message(Command("start"))
-    async def send_welcome(message: types.Message):
-        user_id = message.from_user.id
+        .movie-card:active {
+            transform: scale(0.97);
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 160px;
+            background-color: #334155;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: var(--text-secondary);
+        }
+
+        .movie-info {
+            padding: 10px;
+        }
+
+        .movie-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .movie-badge {
+            font-size: 11px;
+            background: var(--accent-color);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        /* PASTKI IDEAL MENYU (BAR) */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 65px;
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 11px;
+            transition: 0.2s;
+        }
+
+        .nav-item span {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item.active, .nav-item:hover {
+            color: #38bdf8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>🎬 MOVITIMECN</h1>
+        <p>Eng Sara Kinolar va Multfilmlar Olami</p>
+    </div>
+
+    <div class="container">
+        <div class="section-title">🔥 Ommabop Kinolar</div>
         
-        # Har safar /start bosganda bazadan o'chiramiz (obunani qayta tekshirish uchun)
-        conn = sqlite3.connect('movies.db')
-        cursor = conn.cursor()
-        cursor.execute("DELETE FROM users WHERE user_id = ?", (user_id,))
-        conn.commit()
-        conn.close()
-        
-        markup = types.InlineKeyboardMarkup(inline_keyboard=[
-            [types.InlineKeyboardButton(text="✨ OBUNA BO'LDIM ✨", url=INSTAGRAM_URL)],
-            [types.InlineKeyboardButton(text="✅ Tasdiqlash", callback_data="check_insta")]
-        ])
-        await message.reply(
-            "🎬 <b>MOVITIMECN</b>\n"
-            "<i>CINEMA EXPERIENCE</i>\n\n"
-            "🎬 <b>Xush kelibsiz!</b>\n\n"
-            "Kinolar olamiga kirish uchun birgina qadam qoldi 🍿\n\n"
-            "🔒 <b>Botdan foydalanish uchun</b>\n"
-            "Avval Instagram sahifamizga obuna bo'ling. So'ng quyidagi tugmani bosib, kino olamiga yo'l oling!\n\n"
-            "<i>MOVITIMECN • Your world of movies</i>",
-            reply_markup=markup,
-            parse_mode="HTML"
-        )
+        <div class="movies-grid">
+            <div class="movie-card">
+                <div class="movie-poster">🍿</div>
+                <div class="movie-info">
+                    <div class="movie-title">Film 1 nomi</div>
+                    <span class="movie-badge">1080p HD</span>
+                </div>
+            </div>
 
-    @dp.callback_query(F.data == "check_insta")
-    async def process_check_insta(call: types.CallbackQuery):
-        user_id = call.from_user.id
-        
-        conn = sqlite3.connect('movies.db')
-        cursor = conn.cursor()
-        cursor.execute("INSERT OR IGNORE INTO users (user_id) VALUES (?)", (user_id,))
-        conn.commit()
-        conn.close()
-        
-        # Mini App ochiladigan tugma
-        markup = types.InlineKeyboardMarkup(inline_keyboard=[
-            [types.InlineKeyboardButton(text="✨ Kino Olamiga Kirish 🎬", web_app=types.WebAppInfo(url=WEBAPP_URL))],
-            [
-                types.InlineKeyboardButton(text="🎬 Kinolar", callback_data="menu_movies"),
-                types.InlineKeyboardButton(text="🧸 Multfilmlar", callback_data="menu_cartoons")
-            ]
-        ])
-        
-        await call.message.delete()
-        await call.message.answer(
-            "🎬 <b>MOVITIMECN</b>\n"
-            "<i>CINEMA EXPERIENCE</i>\n\n"
-            "✨ <b>Xush kelibsiz!</b>\n\n"
-            "✅ <b>Obuna muvaffaqiyatli tasdiqlandi!</b>\n\n"
-            "🍿 Kerakli kino yoki multfilm <b>kodini</b> yuboring:",
-            reply_markup=markup,
-            parse_mode="HTML"
-        )
-        await call.answer()
+            <div class="movie-card">
+                <div class="movie-poster">🎬</div>
+                <div class="movie-info">
+                    <div class="movie-title">Film 2 nomi</div>
+                    <span class="movie-badge">1080p HD</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    @dp.callback_query(F.data.in_(["menu_movies", "menu_cartoons"]))
-    async def menu_handler(call: types.CallbackQuery):
-        user_id = call.from_user.id
-        conn = sqlite3.connect('movies.db')
-        cursor = conn.cursor()
-        cursor.execute("SELECT user_id FROM users WHERE user_id = ?", (user_id,))
-        user = cursor.fetchone()
-        conn.close()
+    <!-- Pastki qismdagi ideal menyu -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <span>🏠</span>
+            Asosiy
+        </a>
+        <a href="#" class="nav-item">
+            <span>🎥</span>
+            Kinolar
+        </a>
+        <a href="#" class="nav-item">
+            <span>🧸</span>
+            Multfilmlar
+        </a>
+        <a href="#" class="nav-item">
+            <span>👤</span>
+            Profil
+        </a>
+    </div>
 
-        if not user:
-            await call.answer("❌ Avval Instagram sahifamizga obuna bo'lib, tasdiqlang!", show_alert=True)
-            return
-
-        text = "🎬 <b>Kinolar bo'limi</b>\nKino kodini yuboring (masalan: `1`):" if call.data == "menu_movies" else "🧸 <b>Multfilmlar bo'limi</b>\nMultfilm kodini yuboring:"
-        await call.message.edit_text(text, parse_mode="HTML")
-        await call.answer()
-
-    # --- ADMIN: KINO YOKI MULTFILM QO'SHISH ---
-    @dp.message(Command("addmovie"))
-    async def add_movie_start(message: types.Message, state: FSMContext):
-        if message.from_user.id != ADMIN_ID:
-            await message.reply("❌ Bu buyruq faqat admin uchun!")
-            return
-        
-        markup = types.InlineKeyboardMarkup(inline_keyboard=[
-            [
-                types.InlineKeyboardButton(text="🎬 Kino qo'shish", callback_data="add_type_movie"),
-                types.InlineKeyboardButton(text="🧸 Multfilm qo'shish", callback_data="add_type_cartoon")
-            ]
-        ])
-        await message.reply("Nimmo qo'shmoqchisiz? Tanlang:", reply_markup=markup)
-        await state.set_state(AddContent.waiting_for_type)
-
-    @dp.callback_query(AddContent.waiting_for_type, F.data.startswith("add_type_"))
-    async def process_content_type(call: types.CallbackQuery, state: FSMContext):
-        c_type = "movie" if call.data == "add_type_movie" else "cartoon"
-        await state.update_data(content_type=c_type)
-        
-        await call.message.delete()
-        await call.message.answer("1️⃣ Iltimos, ushbu kontent uchun **maxsus kod** yuboring (masalan: `1` yoki `101`):")
-        await state.set_state(AddContent.waiting_for_code)
-        await call.answer()
-
-    @dp.message(AddContent.waiting_for_code, F.text)
-    async def process_code(message: types.Message, state: FSMContext):
-        code = message.text.strip().lower()
-        data = await state.get_data()
-        table = "movies" if data['content_type'] == "movie" else "cartoons"
-        
-        conn = sqlite3.connect('movies.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT code FROM {table} WHERE code = ?", (code,))
-        exists = cursor.fetchone()
-        conn.close()
-        
-        if exists:
-            await message.reply(f"⚠️ <code>{code}</code> bu kod allaqachon mavjud! Boshqa kod kiriting:", parse_mode="HTML")
-            return
-
-        await state.update_data(code=code)
-        await message.reply("2️⃣ Endi ushbu kod uchun **videoni (yoki faylni)** yuboring:")
-        await state.set_state(AddContent.waiting_for_video)
-
-    @dp.message(AddContent.waiting_for_video, F.video | F.document)
-    async def process_video(message: types.Message, state: FSMContext):
-        data = await state.get_data()
-        code = data['code']
-        table = "movies" if data['content_type'] == "movie" else "cartoons"
-        
-        file_id = message.video.file_id if message.video else message.document.file_id
-        caption = message.caption or "🎬 MOVITIMECN"
-        
-        conn = sqlite3.connect('movies.db')
-        cursor = conn.cursor()
-        cursor.execute(f"INSERT OR REPLACE INTO {table} (code, file_id, caption) VALUES (?, ?, ?)", (code, file_id, caption))
-        conn.commit()
-        conn.close()
-        
-        name = "Kino" if table == "movies" else "Multfilm"
-        await message.reply(f"✅ {name} muvaffaqiyatli saqlandi!\nKodi: <code>{code}</code>", parse_mode="HTML")
-        await state.clear()
-
-    # --- KINONI O'CHIRISH ---
-    @dp.message(Command("delmovie"))
-    async def delete_movie(message: types.Message):
-        if message.from_user.id != ADMIN_ID:
-            await message.reply("❌ Bu buyruq faqat admin uchun!")
-            return
-        
-        args = message.text.split(maxsplit=1)
-        if len(args) < 2:
-            await message.reply("⚠️ Qaysi kodni o'chirmoqchisiz? Masalan: /delmovie 1")
-            return
-        
-        code = args[1].strip().lower()
-        
-        conn = sqlite3.connect('movies.db')
-        cursor = conn.cursor()
-        cursor.execute("SELECT code FROM movies WHERE code = ?", (code,))
-        m_exists = cursor.fetchone()
-        
-        cursor.execute("SELECT code FROM cartoons WHERE code = ?", (code,))
-        c_exists = cursor.fetchone()
-        
-        if m_exists:
-            cursor.execute("DELETE FROM movies WHERE code = ?", (code,))
-            conn.commit()
-            conn.close()
-            await message.reply(f"✅ <code>{code}</code> kodli kino o'chirib tashlandi!", parse_mode="HTML")
-        elif c_exists:
-            cursor.execute("DELETE FROM cartoons WHERE code = ?", (code,))
-            conn.commit()
-            conn.close()
-            await message.reply(f"✅ <code>{code}</code> kodli multfilm o'chirib tashlandi!", parse_mode="HTML")
-        else:
-            conn.close()
-            await message.reply(f"❌ <code>{code}</code> kodli kontent topilmadi.", parse_mode="HTML")
-
-    # --- FOYDALANUVCHI KOD YUBORGANDA ---
-    @dp.message(F.text)
-    async def get_content(message: types.Message):
-        if message.text.startswith('/'):
-            return
-
-        user_id = message.from_user.id
-        
-        conn = sqlite3.connect('movies.db')
-        cursor = conn.cursor()
-        cursor.execute("SELECT user_id FROM users WHERE user_id = ?", (user_id,))
-        user = cursor.fetchone()
-        
-        if not user:
-            conn.close()
-            markup = types.InlineKeyboardMarkup(inline_keyboard=[
-                [types.InlineKeyboardButton(text="✨ OBUNA BO'LDIM ✨", url=INSTAGRAM_URL)],
-                [types.InlineKeyboardButton(text="✅ Tasdiqlash", callback_data="check_insta")]
-            ])
-            await message.reply(
-                "🎬 <b>MOVITIMECN</b>\n"
-                "<i>CINEMA EXPERIENCE</i>\n\n"
-                "⚠️ Botdan foydalanish uchun avval **Instagram** sahifamizga obuna bo'ling va «✅ Tasdiqlash» tugmasini bosing:",
-                reply_markup=markup,
-                parse_mode="HTML"
-            )
-            return
-
-        code = message.text.strip().lower()
-        
-        cursor.execute("SELECT file_id, caption FROM movies WHERE code = ?", (code,))
-        content = cursor.fetchone()
-        
-        if not content:
-            cursor.execute("SELECT file_id, caption FROM cartoons WHERE code = ?", (code,))
-            content = cursor.fetchone()
-
-        conn.close()
-        
-        if content:
-            markup = types.InlineKeyboardMarkup(inline_keyboard=[
-                [
-                    types.InlineKeyboardButton(text="📉 480p", callback_data=f"ql_{code}_480"),
-                    types.InlineKeyboardButton(text="💻 720p", callback_data=f"ql_{code}_720"),
-                    types.InlineKeyboardButton(text="💎 1080p", callback_data=f"ql_{code}_1080")
-                ]
-            ])
-            
-            await message.reply(
-                f"🎬 <b>Kodi:</b> <code>{code}</code>\n\nKerakli sifatni tanlang:",
-                reply_markup=markup,
-                parse_mode="HTML"
-            )
-        else:
-            await message.reply("❌ Bunday kodli kino yoki multfilm topilmadi. Kodni tekshirib qaytadan yuboring.")
-
-    # --- SIFAT TANLANGANDA VIDEONI YUBORISH ---
-    @dp.callback_query(F.data.startswith("ql_"))
-    async def send_quality_video(call: types.CallbackQuery):
-        user_id = call.from_user.id
-        conn = sqlite3.connect('movies.db')
-        cursor = conn.cursor()
-        cursor.execute("SELECT user_id FROM users WHERE user_id = ?", (user_id,))
-        user = cursor.fetchone()
-
-        if not user:
-            conn.close()
-            await call.answer("❌ Avval Instagram sahifamizga obuna bo'ling!", show_alert=True)
-            return
-
-        parts = call.data.split("_")
-        code = parts[1]
-        quality = parts[2]
-        
-        cursor.execute("SELECT file_id, caption FROM movies WHERE code = ?", (code,))
-        content = cursor.fetchone()
-        
-        if not content:
-            cursor.execute("SELECT file_id, caption FROM cartoons WHERE code = ?", (code,))
-            content = cursor.fetchone()
-            
-        conn.close()
-        
-        if content:
-            file_id, caption = content
-            await call.message.delete()
-            await call.message.answer_video(
-                video=file_id,
-                caption=f"{caption}\n✨ Sifati: <b>{quality}p</b>",
-                parse_mode="HTML"
-            )
-            await call.answer()
-        else:
-            await call.answer("❌ Kechirasiz, bu video topilmadi.", show_alert=True)
-
-    await dp.start_polling(bot)
-
-if __name__ == '__main__':
-    asyncio.run(main())
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand(); // Mini App'ni to'liq ekranga ochish
+    </script>
+</body>
+</html>

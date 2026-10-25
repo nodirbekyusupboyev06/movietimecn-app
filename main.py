@@ -7,7 +7,7 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 from aiogram.fsm.storage.memory import MemoryStorage
 
 # ⚙️ TOKEN va KANAL SOZLAMALARI
-TOKEN = "SIZNING_BOT_TOKENINGIZNI_SHU_YERGA_YOZING"  # Bot tokeningizni yozing
+TOKEN = "8876644496:AAEs6dsbg39ATsoo2-IPOZKtz_OoadRlIT8"  # Bot tokeningizni yozing
 CHANNEL_USERNAME = "@movitimecn"  # Kino tashlab boriladigan asosiy kanal
 WEB_APP_URL = "https://nodirbekyusupboyev06.github.io/movietimecn-app/"  # GitHub Pages sayt havolangiz
 

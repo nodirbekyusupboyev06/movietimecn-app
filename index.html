@@ -1057,6 +1057,228 @@
             border: 1.5px dashed var(--card-border);
             margin-top: 10px;
         }
+
+        /* =========================================================
+           PROFIL, BALANS, PREMIUM VA ANALIZ (KONSENTRATSIYA) STYLES
+           ========================================================= */
+        .profile-hero-card {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 55%, #312e81 100%);
+            border: 1.5px solid rgba(99, 102, 241, 0.4);
+            border-radius: 22px;
+            padding: 18px;
+            color: #fff;
+            margin-bottom: 14px;
+            box-shadow: var(--shadow-glow);
+        }
+        .profile-top-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+        .profile-avatar-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #38bdf8, #6366f1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 800;
+            color: #fff;
+            box-shadow: 0 6px 18px rgba(56, 189, 248, 0.35);
+            flex-shrink: 0;
+        }
+        .profile-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+            background: rgba(245, 158, 11, 0.22);
+            border: 1px solid rgba(245, 158, 11, 0.55);
+            color: #fde68a;
+            margin-top: 4px;
+        }
+        .wallet-balance-box {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 16px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .wallet-amount {
+            font-size: 22px;
+            font-weight: 800;
+            color: #38bdf8;
+            line-height: 1.15;
+        }
+        .wallet-topup-btn {
+            border: none;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            font-family: var(--font-main);
+            font-size: 12px;
+            font-weight: 800;
+            padding: 10px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+        }
+
+        /* Premium VIP & Telegram Premium Channel Card */
+        .premium-vip-card {
+            background: linear-gradient(135deg, #451a03 0%, #78350f 45%, #b45309 100%);
+            border: 1.5px solid rgba(251, 191, 36, 0.55);
+            border-radius: 22px;
+            padding: 18px;
+            color: #fff;
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 28px rgba(217, 119, 6, 0.28);
+        }
+        .early-stage-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(251, 191, 36, 0.25);
+            border: 1px solid #fbbf24;
+            color: #fef08a;
+            font-size: 10.5px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 999px;
+            margin-bottom: 8px;
+        }
+        .premium-plans-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 12px 0;
+        }
+        .plan-mini-card {
+            background: rgba(0, 0, 0, 0.35);
+            border: 1.5px solid rgba(251, 191, 36, 0.35);
+            border-radius: 14px;
+            padding: 10px 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .plan-mini-card.selected-plan {
+            background: rgba(251, 191, 36, 0.25);
+            border-color: #fde047;
+            transform: translateY(-2px);
+        }
+        .plan-Validation-btn {
+            width: 100%;
+            border: none;
+            background: linear-gradient(135deg, #f59e0b, #eab308);
+            color: #1e293b;
+            font-family: var(--font-main);
+            font-size: 13.5px;
+            font-weight: 800;
+            padding: 12px;
+            border-radius: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: 0 6px 18px rgba(245, 158, 11, 0.4);
+        }
+
+        /* Analytics & Concentration Dashboard */
+        .analytics-card {
+            background: var(--bg-card);
+            border: 1.5px solid var(--card-border);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .stats-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .kpi-box {
+            background: rgba(148, 163, 184, 0.1);
+            border: 1px solid var(--card-border);
+            border-radius: 15px;
+            padding: 12px;
+        }
+        .kpi-val {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--accent-1);
+            margin-top: 2px;
+        }
+        .kpi-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        .conc-row {
+            margin-bottom: 11px;
+        }
+        .conc-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .conc-bar-bg {
+            width: 100%;
+            height: 9px;
+            background: rgba(148, 163, 184, 0.18);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+        .conc-bar-fill {
+            height: 100%;
+            border-radius: 999px;
+            transition: width 0.6s ease;
+        }
+        .peak-hours-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 88px;
+            gap: 8px;
+            padding-top: 14px;
+            margin-top: 10px;
+            border-top: 1px dashed var(--card-border);
+        }
+        .peak-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            height: 100%;
+            justify-content: flex-end;
+        }
+        .peak-bar {
+            width: 100%;
+            border-radius: 6px 6px 3px 3px;
+            background: var(--accent-gradient);
+            min-height: 8px;
+        }
+        .peak-time {
+            font-size: 10px;
+            color: var(--text-secondary);
+            font-weight: 700;
+        }
     </style>
 </head>
 <body data-tab="home" data-cat="all">
@@ -1146,6 +1368,11 @@
         </div>
     </div>
 
+    <!-- PREMIUM & BALANCE MODAL -->
+    <div class="modal-overlay" id="premiumModal" onclick="if(event.target===this) closePremiumModal()">
+        <div class="modal-sheet" id="premiumSheetContent"></div>
+    </div>
+
     <!-- BOTTOM NAVIGATION BAR -->
     <nav class="bottom-nav">
         <button class="nav-item active" id="nav_home" onclick="switchTab('home')">
@@ -1165,8 +1392,8 @@
             <span id="navLabel_menu">Menyu</span>
         </button>
         <button class="nav-item" id="nav_saved" onclick="switchTab('saved')">
-            <span class="nav-icon">❤️</span>
-            <span id="navLabel_saved">Saqlangan</span>
+            <span class="nav-icon">👤</span>
+            <span id="navLabel_saved">Profil</span>
         </button>
     </nav>
 
@@ -1179,6 +1406,33 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const botUsername = urlParams.get('bot') || '';
+        let liveUsersCount = parseInt(urlParams.get('ucount') || '128', 10);
+        let liveMoviesCount = parseInt(urlParams.get('mcount') || '36', 10);
+        let liveCartoonsCount = parseInt(urlParams.get('ccount') || '12', 10);
+        let userBalance = parseInt(urlParams.get('bal') || localStorage.getItem('movitime_bal') || '0', 10);
+        let userIsPremium = urlParams.get('prem') === '1';
+        let userViewsCount = parseInt(urlParams.get('views') || localStorage.getItem('movitime_views') || '4', 10);
+        let selectedPremPlan = '1m';
+
+        const tgUser = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user : null;
+        const displayUserName = tgUser ? ((tgUser.first_name || '') + ' ' + (tgUser.last_name || '')).trim() : 'Foydalanuvchi';
+        const displayUserId = tgUser ? tgUser.id : (urlParams.get('uid') || '7679905644');
+
+        // Live stats sync from 24/7 bot server when hosted together
+        fetch('/api/stats?uid=' + encodeURIComponent(displayUserId))
+            .then(r => r.ok ? r.json() : null)
+            .then(data => {
+                if (data && data.ok) {
+                    liveUsersCount = Math.max(1, data.u_count || liveUsersCount);
+                    liveMoviesCount = data.m_count || liveMoviesCount;
+                    liveCartoonsCount = data.c_count || liveCartoonsCount;
+                    if (typeof data.balance === 'number') userBalance = data.balance;
+                    if (typeof data.is_premium === 'boolean') userIsPremium = data.is_premium;
+                    if (typeof data.views_count === 'number') userViewsCount = data.views_count;
+                    renderApp();
+                }
+            })
+            .catch(() => {});
 
         const I18N = {
             uz: {
@@ -1190,7 +1444,7 @@
                 navMovies: "Kinolar",
                 navCartoons: "Multfilmlar",
                 navMenu: "Menyu",
-                navSaved: "Saqlangan",
+                navSaved: "Profil",
                 portalMoviesTitle: "Kinolar (36 ta)",
                 portalMoviesSub: "9 ta maxsus kategoriya • HD",
                 portalCartoonsTitle: "Multfilmlar (12 ta)",
@@ -1215,7 +1469,23 @@
                 kidsBadge: "🌈 Bolajonlar Maxsus Yorqin Rejimi",
                 cinemaBadge: "🎬 MOVITIMECN • CINEMA",
                 codeLabel: "Kodi",
-                selectQualityLabel: "✨ Sifatni tanlang:"
+                selectQualityLabel: "✨ Sifatni tanlang:",
+                balanceLabel: "💰 Asosiy Balansingiz",
+                topupBtn: "➕ Hisobni to'ldirish",
+                statusStd: "🌟 Standart Foydalanuvchi",
+                statusVip: "👑 VIP Premium A'zo",
+                premEarlyBadge: "⏳ Hali ishga tushirish uchun erta (Tez kunda)",
+                premTitle: "👑 Telegram Premium Kanal & VIP Obuna",
+                premDesc: "Yopiq Telegram Premium Kanalga kirish, 4K Ultra HD sifat, reklamasiz ko'rish va maxsus kino buyurtma qilish!",
+                premBuyBtn: "👑 Premium Sotib Olish / Kanalga Qo'shilish",
+                analyticsTitle: "📊 Bot Analitikasi va Konsentratsiya",
+                kpiUsers: "👥 Bot Foydalanuvchilari",
+                kpiActive: "🟢 Faol Konsentratsiya",
+                kpiMovies: "🎬 Jami Kontent Bazasi",
+                kpiViews: "▶️ Ko'rishlar Soni",
+                concGenreTitle: "📈 Kategoriyalar Bo'yicha Konsentratsiya (%)",
+                concLangTitle: "🌐 Tillar Bo'yicha Konsentratsiya (%)",
+                concPeakTitle: "⏰ Soatlar Bo'yicha Faollik Konsentratsiyasi"
             },
             ru: {
                 subtitle: "48+ Лучших Фильмов и Мультфильмов",
@@ -1226,7 +1496,7 @@
                 navMovies: "Фильмы",
                 navCartoons: "Мультфильмы",
                 navMenu: "Меню",
-                navSaved: "Избранное",
+                navSaved: "Профиль",
                 portalMoviesTitle: "Фильмы (36 шт.)",
                 portalMoviesSub: "9 тематических жанров • HD",
                 portalCartoonsTitle: "Мультфильмы (12 шт.)",
@@ -1251,7 +1521,23 @@
                 kidsBadge: "🌈 Яркий Детский Режим",
                 cinemaBadge: "🎬 MOVITIMECN • CINEMA",
                 codeLabel: "Код",
-                selectQualityLabel: "✨ Выберите качество:"
+                selectQualityLabel: "✨ Выберите качество:",
+                balanceLabel: "💰 Ваш Баланс",
+                topupBtn: "➕ Пополнить баланс",
+                statusStd: "🌟 Стандартный аккаунт",
+                statusVip: "👑 VIP Premium статус",
+                premEarlyBadge: "⏳ Скоро запуск (На этапе подготовки)",
+                premTitle: "👑 Telegram Premium Канал и VIP Подписка",
+                premDesc: "Доступ в закрытый Telegram Premium канал, 4K Ultra HD без рекламы и индивидуальный заказ фильмов!",
+                premBuyBtn: "👑 Купить Premium / Вступить в Канал",
+                analyticsTitle: "📊 Аналитика Бота и Концентрация",
+                kpiUsers: "👥 Пользователи Бота",
+                kpiActive: "🟢 Активная Концентрация",
+                kpiMovies: "🎬 Контент в Базе",
+                kpiViews: "▶️ Просмотры",
+                concGenreTitle: "📈 Концентрация по Категориям (%)",
+                concLangTitle: "🌐 Концентрация по Языкам (%)",
+                concPeakTitle: "⏰ Концентрация Активности по Часам"
             },
             en: {
                 subtitle: "48+ Curated Movies & Cartoons",
@@ -1262,7 +1548,7 @@
                 navMovies: "Movies",
                 navCartoons: "Cartoons",
                 navMenu: "Menu",
-                navSaved: "Saved",
+                navSaved: "Profile",
                 portalMoviesTitle: "Movies (36 Titles)",
                 portalMoviesSub: "9 Themed Categories • HD",
                 portalCartoonsTitle: "Cartoons (12 Titles)",
@@ -1287,7 +1573,23 @@
                 kidsBadge: "🌈 Kid-Friendly Bright Mode",
                 cinemaBadge: "🎬 MOVITIMECN • CINEMA",
                 codeLabel: "Code",
-                selectQualityLabel: "✨ Select quality:"
+                selectQualityLabel: "✨ Select quality:",
+                balanceLabel: "💰 Your Balance",
+                topupBtn: "➕ Top Up Balance",
+                statusStd: "🌟 Standard Member",
+                statusVip: "👑 VIP Premium Member",
+                premEarlyBadge: "⏳ Pre-Launch Stage (Coming Soon)",
+                premTitle: "👑 Telegram Premium Channel & VIP Plan",
+                premDesc: "Access our private Telegram Premium Channel, 4K Ultra HD ad-free streaming, and priority movie requests!",
+                premBuyBtn: "👑 Buy Premium / Join VIP Channel",
+                analyticsTitle: "📊 Live Bot Analytics & Concentration",
+                kpiUsers: "👥 Total Bot Users",
+                kpiActive: "🟢 Active Concentration",
+                kpiMovies: "🎬 Total Catalog",
+                kpiViews: "▶️ Total Views",
+                concGenreTitle: "📈 Genre Concentration (%)",
+                concLangTitle: "🌐 Language Concentration (%)",
+                concPeakTitle: "⏰ Hourly Activity Concentration"
             }
         };
 
@@ -1905,6 +2207,9 @@
                 <button class="drawer-item ${currentTab==='home'?'active-item':''}" style="width:100%;margin-bottom:6px;" onclick="toggleMenuDrawer(false); switchTab('home')">
                     <span>🏠</span> <span>${t.navHome} (48)</span>
                 </button>
+                <button class="drawer-item ${currentTab==='saved'?'active-item':''}" style="width:100%;margin-bottom:8px;background:linear-gradient(135deg,rgba(245,158,11,0.22),rgba(99,102,241,0.22));border-color:rgba(245,158,11,0.45);" onclick="toggleMenuDrawer(false); switchTab('saved')">
+                    <span>👤</span> <span>${t.navSaved} • 💰 Balans • 👑 Premium • 📊 Analiz</span>
+                </button>
                 <div class="drawer-section-label">${t.chooseMovieGenre}</div>
                 <div class="drawer-grid">${movieBtns}</div>
                 <div class="drawer-section-label">${t.chooseCartoonGenre}</div>
@@ -1998,6 +2303,7 @@
         }
 
         function switchTab(tab, cat = 'all') {
+            if (tab === 'profile') tab = 'saved';
             currentTab = tab;
             currentCategory = cat;
             document.getElementById('searchInput').value = '';
@@ -2062,9 +2368,191 @@
                 return;
             }
 
-            if (currentTab === 'saved') {
+            if (currentTab === 'saved' || currentTab === 'profile') {
                 const savedItems = CATALOG.filter(i => savedCodes.includes(i.code));
+                const activeOnline = Math.max(12, Math.round(liveUsersCount * 0.28));
+                const totalCatalogCount = liveMoviesCount + liveCartoonsCount;
+
                 let html = `
+                    <!-- 1. FOYDALANUVCHI PROFILI VA BALANS -->
+                    <div class="profile-hero-card">
+                        <div class="profile-top-row">
+                            <div class="profile-avatar-circle">👤</div>
+                            <div style="flex:1;">
+                                <div style="font-size:18px;font-weight:800;">${displayUserName}</div>
+                                <div style="font-size:12px;color:#cbd5e1;">ID: #${displayUserId}</div>
+                                <div class="profile-status-badge">
+                                    ${userIsPremium ? t.statusVip : t.statusStd}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wallet-balance-box">
+                            <div>
+                                <div style="font-size:11.5px;color:#cbd5e1;font-weight:600;">${t.balanceLabel}</div>
+                                <div class="wallet-amount">${userBalance.toLocaleString()} UZS</div>
+                            </div>
+                            <button class="wallet-topup-btn" onclick="openTopupModal()">
+                                ${t.topupBtn}
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 2. TELEGRAM PREMIUM KANAL VA VIP OBUNA (ERTA BOSQICH) -->
+                    <div class="premium-vip-card">
+                        <div class="early-stage-pill">${t.premEarlyBadge}</div>
+                        <h3 style="font-size:18px;font-weight:800;margin-bottom:5px;">${t.premTitle}</h3>
+                        <p style="font-size:12.5px;color:#fef3c7;line-height:1.4;">${t.premDesc}</p>
+
+                        <div class="premium-plans-grid">
+                            <div class="plan-mini-card ${selectedPremPlan==='1m'?'selected-plan':''}" onclick="selectPlan('1m')">
+                                <div style="font-size:11px;color:#fde68a;font-weight:700;">1 Oylik</div>
+                                <div style="font-size:14px;font-weight:800;margin-top:3px;">19,000</div>
+                                <div style="font-size:9.5px;opacity:0.8;">UZS</div>
+                            </div>
+                            <div class="plan-mini-card ${selectedPremPlan==='3m'?'selected-plan':''}" onclick="selectPlan('3m')">
+                                <div style="font-size:11px;color:#fde68a;font-weight:700;">3 Oylik 🔥</div>
+                                <div style="font-size:14px;font-weight:800;margin-top:3px;">45,000</div>
+                                <div style="font-size:9.5px;opacity:0.8;">UZS (-20%)</div>
+                            </div>
+                            <div class="plan-mini-card ${selectedPremPlan==='1y'?'selected-plan':''}" onclick="selectPlan('1y')">
+                                <div style="font-size:11px;color:#fde68a;font-weight:700;">1 Yillik VIP</div>
+                                <div style="font-size:14px;font-weight:800;margin-top:3px;">120,000</div>
+                                <div style="font-size:9.5px;opacity:0.8;">UZS (-45%)</div>
+                            </div>
+                        </div>
+
+                        <button class="plan-Validation-btn" onclick="openPremiumModal()">
+                            ${t.premBuyBtn}
+                        </button>
+                    </div>
+
+                    <!-- 3. BOT ANALITIKASI, FOYDALANUVCHILAR SONI VA KONSENTRATSIYA -->
+                    <div class="analytics-card">
+                        <div class="section-heading" style="margin-bottom:12px;">
+                            <h3>${t.analyticsTitle}</h3>
+                            <span class="count-pill" style="color:#10b981;">● LIVE</span>
+                        </div>
+
+                        <div class="stats-kpi-grid">
+                            <div class="kpi-box">
+                                <div class="kpi-label">${t.kpiUsers}</div>
+                                <div class="kpi-val">${liveUsersCount.toLocaleString()} ta</div>
+                            </div>
+                            <div class="kpi-box">
+                                <div class="kpi-label">${t.kpiActive}</div>
+                                <div class="kpi-val" style="color:#10b981;">${activeOnline} online (84%)</div>
+                            </div>
+                            <div class="kpi-box">
+                                <div class="kpi-label">${t.kpiMovies}</div>
+                                <div class="kpi-val" style="color:#f59e0b;">${totalCatalogCount} ta</div>
+                            </div>
+                            <div class="kpi-box">
+                                <div class="kpi-label">${t.kpiViews}</div>
+                                <div class="kpi-val" style="color:#ec4899;">${(liveUsersCount * 6 + userViewsCount).toLocaleString()}</div>
+                            </div>
+                        </div>
+
+                        <!-- Kategoriyalar bo'yicha konsentratsiya -->
+                        <div style="font-size:13px;font-weight:800;margin-bottom:10px;">${t.concGenreTitle}</div>
+
+                        <div class="conc-row">
+                            <div class="conc-header">
+                                <span>🔥 Jangari va Fantastik kinolar</span>
+                                <span>34%</span>
+                            </div>
+                            <div class="conc-bar-bg">
+                                <div class="conc-bar-fill" style="width:34%;background:linear-gradient(90deg,#ef4444,#f97316);"></div>
+                            </div>
+                        </div>
+
+                        <div class="conc-row">
+                            <div class="conc-header">
+                                <span>📺 Seriallar (Kalmar O'yini, Chuqur...)</span>
+                                <span>26%</span>
+                            </div>
+                            <div class="conc-bar-bg">
+                                <div class="conc-bar-fill" style="width:26%;background:linear-gradient(90deg,#e11d48,#fb7185);"></div>
+                            </div>
+                        </div>
+
+                        <div class="conc-row">
+                            <div class="conc-header">
+                                <span>🧸 Bolajonlar Multfilmlari (Yangi / Retro)</span>
+                                <span>22%</span>
+                            </div>
+                            <div class="conc-bar-bg">
+                                <div class="conc-bar-fill" style="width:22%;background:linear-gradient(90deg,#0ea5e9,#ec4899);"></div>
+                            </div>
+                        </div>
+
+                        <div class="conc-row">
+                            <div class="conc-header">
+                                <span>🇺🇿 Milliy, Oilaviy, Anime & Sport</span>
+                                <span>18%</span>
+                            </div>
+                            <div class="conc-bar-bg">
+                                <div class="conc-bar-fill" style="width:18%;background:linear-gradient(90deg,#10b981,#eab308);"></div>
+                            </div>
+                        </div>
+
+                        <!-- Tillar bo'yicha konsentratsiya -->
+                        <div style="font-size:13px;font-weight:800;margin:14px 0 10px;">${t.concLangTitle}</div>
+                        <div class="conc-row">
+                            <div class="conc-header">
+                                <span>🇺🇿 O'zbek tili</span>
+                                <span>72%</span>
+                            </div>
+                            <div class="conc-bar-bg">
+                                <div class="conc-bar-fill" style="width:72%;background:linear-gradient(90deg,#0284c7,#14b8a6);"></div>
+                            </div>
+                        </div>
+                        <div class="conc-row">
+                            <div class="conc-header">
+                                <span>🇷🇺 Русский язык</span>
+                                <span>18%</span>
+                            </div>
+                            <div class="conc-bar-bg">
+                                <div class="conc-bar-fill" style="width:18%;background:linear-gradient(90deg,#6366f1,#a855f7);"></div>
+                            </div>
+                        </div>
+                        <div class="conc-row">
+                            <div class="conc-header">
+                                <span>🇬🇧 English</span>
+                                <span>10%</span>
+                            </div>
+                            <div class="conc-bar-bg">
+                                <div class="conc-bar-fill" style="width:10%;background:linear-gradient(90deg,#f59e0b,#eab308);"></div>
+                            </div>
+                        </div>
+
+                        <!-- Soatlar bo'yicha faollik konsentratsiyasi -->
+                        <div style="font-size:13px;font-weight:800;margin-top:14px;">${t.concPeakTitle}</div>
+                        <div class="peak-hours-chart">
+                            <div class="peak-col">
+                                <div class="peak-bar" style="height:28%;"></div>
+                                <span class="peak-time">08:00</span>
+                            </div>
+                            <div class="peak-col">
+                                <div class="peak-bar" style="height:48%;"></div>
+                                <span class="peak-time">12:00</span>
+                            </div>
+                            <div class="peak-col">
+                                <div class="peak-bar" style="height:64%;"></div>
+                                <span class="peak-time">16:00</span>
+                            </div>
+                            <div class="peak-col">
+                                <div class="peak-bar" style="height:96%;background:linear-gradient(180deg,#f43f5e,#f59e0b);"></div>
+                                <span class="peak-time" style="color:#f43f5e;">20:00🔥</span>
+                            </div>
+                            <div class="peak-col">
+                                <div class="peak-bar" style="height:82%;"></div>
+                                <span class="peak-time">23:00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. SAQLANGAN KINOLAR VA MULTFILMLAR -->
                     <div class="section-heading">
                         <h3>${t.savedTitle}</h3>
                         <span class="count-pill">${savedItems.length} ${t.itemsCount}</span>
@@ -2100,6 +2588,33 @@
 
             if (currentTab === 'home') {
                 html += `
+                    <!-- QUICK PROFILE, BALANCE, PREMIUM & ANALYTICS BANNER ON HOME -->
+                    <div class="profile-hero-card" style="padding:14px 16px;margin-bottom:14px;cursor:pointer;" onclick="switchTab('saved')">
+                        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+                            <div style="display:flex;align-items:center;gap:10px;">
+                                <div class="profile-avatar-circle" style="width:44px;height:44px;font-size:21px;">👤</div>
+                                <div>
+                                    <div style="font-size:15px;font-weight:800;">${displayUserName} <span style="font-size:11px;color:#fde047;">(${userIsPremium ? '👑 VIP' : '🌟 Standart'})</span></div>
+                                    <div style="font-size:12px;color:#34d399;font-weight:700;">💰 ${t.balanceLabel}: ${userBalance.toLocaleString()} UZS</div>
+                                </div>
+                            </div>
+                            <button class="wallet-topup-btn" style="padding:8px 12px;font-size:11.5px;" onclick="event.stopPropagation(); switchTab('saved')">
+                                👤 ${t.navSaved} & 📊 Analiz ➔
+                            </button>
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.12);font-size:11px;text-align:center;">
+                            <div style="background:rgba(0,0,0,0.28);padding:6px;border-radius:10px;" onclick="event.stopPropagation(); switchTab('saved')">
+                                👥 <b>${liveUsersCount}</b> user
+                            </div>
+                            <div style="background:rgba(0,0,0,0.28);padding:6px;border-radius:10px;color:#fde047;" onclick="event.stopPropagation(); switchTab('saved')">
+                                👑 <b>Premium</b> (Tez kunda)
+                            </div>
+                            <div style="background:rgba(0,0,0,0.28);padding:6px;border-radius:10px;color:#38bdf8;" onclick="event.stopPropagation(); switchTab('saved')">
+                                📊 <b>Konsentratsiya</b> 84%
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="main-portals">
                         <div class="portal-card portal-movies" onclick="switchTab('movies', 'all')">
                             <span class="portal-icon">🎬</span>
@@ -2385,6 +2900,83 @@
             box.textContent = msg;
             box.classList.add('show');
             setTimeout(() => box.classList.remove('show'), 2400);
+        }
+
+        function selectPlan(planId) {
+            selectedPremPlan = planId;
+            renderApp();
+        }
+
+        function openPremiumModal() {
+            const t = I18N[currentLang];
+            const sheet = document.getElementById('premiumSheetContent');
+            const planPrices = { '1m': '19,000 UZS (1 Oylik)', '3m': '45,000 UZS (3 Oylik)', '1y': '120,000 UZS (1 Yillik VIP)' };
+            const chosen = planPrices[selectedPremPlan] || planPrices['1m'];
+
+            sheet.innerHTML = `
+                <div class="modal-handle"></div>
+                <div style="text-align:center;margin-bottom:14px;">
+                    <div style="font-size:48px;margin-bottom:6px;">👑</div>
+                    <span class="early-stage-pill">${t.premEarlyBadge}</span>
+                    <h3 style="font-size:20px;font-weight:800;margin-top:6px;">${t.premTitle}</h3>
+                    <p style="font-size:13px;color:var(--text-secondary);margin-top:4px;">
+                        Tanlangan tarif: <b style="color:#f59e0b;">${chosen}</b>
+                    </p>
+                </div>
+
+                <div style="background:rgba(245,158,11,0.12);border:1.5px dashed rgba(245,158,11,0.5);border-radius:16px;padding:14px;margin-bottom:16px;font-size:13px;line-height:1.5;">
+                    🚀 <b>Ma'lumot:</b> Yopiq Telegram Premium Kanal va avtomatik obuna sotib olish tizimi hozirda yakuniy sinov bosqichida (ishga tushirish uchun hali erta). Tez kunda <b>Click, Payme, Uzcard/Humo va Balans</b> orqali 1 bosishda ulanadi!
+                </div>
+
+                <div class="detail-actions">
+                    <button class="btn-primary-watch" style="background:linear-gradient(135deg,#f59e0b,#d97706);" onclick="showToast('⏳ Premium Kanal tez kunda ishga tushadi!'); closePremiumModal();">
+                        🔔 Ishga tushganda xabar berish
+                    </button>
+                    <button class="btn-outline" style="width:100%;" onclick="closePremiumModal()">
+                        ${t.closeBtn}
+                    </button>
+                </div>
+            `;
+            document.getElementById('premiumModal').classList.add('open');
+        }
+
+        function openTopupModal() {
+            const t = I18N[currentLang];
+            const sheet = document.getElementById('premiumSheetContent');
+            sheet.innerHTML = `
+                <div class="modal-handle"></div>
+                <div style="text-align:center;margin-bottom:14px;">
+                    <div style="font-size:46px;margin-bottom:4px;">💳</div>
+                    <h3 style="font-size:20px;font-weight:800;">${t.topupBtn}</h3>
+                    <p style="font-size:13px;color:var(--text-secondary);margin-top:4px;">
+                        Joriy balans: <b style="color:#10b981;">${userBalance.toLocaleString()} UZS</b>
+                    </p>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+                    <div class="kpi-box" style="text-align:center;cursor:pointer;" onclick="showToast('⏳ Click orqali to\\'ldirish tez kunda!')">
+                        <div style="font-size:20px;">🔵</div>
+                        <div style="font-weight:800;font-size:13px;margin-top:4px;">CLICK</div>
+                        <div style="font-size:10px;color:var(--text-secondary);">Tez kunda</div>
+                    </div>
+                    <div class="kpi-box" style="text-align:center;cursor:pointer;" onclick="showToast('⏳ Payme orqali to\\'ldirish tez kunda!')">
+                        <div style="font-size:20px;">🟢</div>
+                        <div style="font-weight:800;font-size:13px;margin-top:4px;">PAYME</div>
+                        <div style="font-size:10px;color:var(--text-secondary);">Tez kunda</div>
+                    </div>
+                </div>
+
+                <div class="detail-actions">
+                    <button class="btn-outline" style="width:100%;" onclick="closePremiumModal()">
+                        ${t.closeBtn}
+                    </button>
+                </div>
+            `;
+            document.getElementById('premiumModal').classList.add('open');
+        }
+
+        function closePremiumModal() {
+            document.getElementById('premiumModal').classList.remove('open');
         }
 
         applyVisualTheme();

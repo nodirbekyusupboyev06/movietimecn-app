@@ -2,203 +2,2521 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOVITIMECN - Kino Olami</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MOVITIMECN • Cinema & Cartoon World</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --accent-color: #6366f1;
-            --text-color: #f8fafc;
+            /* Default Home Theme: IMAX Royal Cinema */
+            --bg-main: #080c16;
+            --bg-secondary: #111827;
+            --bg-card: rgba(23, 33, 53, 0.88);
+            --bg-glass: rgba(15, 23, 42, 0.85);
+            --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
+            --accent-1: #38bdf8;
+            --accent-2: #6366f1;
+            --accent-3: #f43f5e;
+            --accent-gradient: linear-gradient(135deg, #38bdf8 0%, #6366f1 100%);
+            --banner-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0c4a6e 100%);
+            --card-border: rgba(56, 189, 248, 0.22);
+            --card-radius: 18px;
+            --pill-radius: 14px;
+            --shadow-glow: 0 10px 30px -5px rgba(56, 189, 248, 0.28);
+            --font-main: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            --pattern-opacity: 0.06;
+        }
+
+        /* =========================================================
+           BOLAJONLAR UCHUN YORQIN MULTFILM REJIMI (KIDS CARTOON MODE)
+           ========================================================= */
+        body.kids-mode {
+            --bg-main: #fffdf5;
+            --bg-secondary: #e0f2fe;
+            --bg-card: #ffffff;
+            --bg-glass: rgba(255, 255, 255, 0.92);
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --accent-1: #0284c7;
+            --accent-2: #f59e0b;
+            --accent-3: #ec4899;
+            --accent-gradient: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 50%, #FFD166 100%);
+            --banner-gradient: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #f472b6 100%);
+            --card-border: rgba(56, 189, 248, 0.45);
+            --card-radius: 26px;
+            --pill-radius: 999px;
+            --shadow-glow: 0 12px 28px -4px rgba(56, 189, 248, 0.32);
+            --font-main: 'Fredoka', 'Outfit', sans-serif;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            padding-bottom: 80px; /* Menyu uchun pastdan joy qoldiramiz */
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            padding-bottom: 92px;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background-color 0.4s ease, color 0.3s ease;
+            position: relative;
         }
 
-        .header {
-            padding: 20px;
-            text-align: center;
-            background: linear-gradient(135deg, #1e293b, #334155);
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        /* Dynamic Ambient Background Glows */
+        .ambient-bg {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
         }
 
-        .header h1 {
-            font-size: 24px;
-            color: #38bdf8;
-            margin-bottom: 5px;
+        .ambient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(75px);
+            opacity: 0.35;
+            transition: all 0.6s ease;
         }
 
-        .header p {
-            font-size: 14px;
+        .orb-1 {
+            width: 280px;
+            height: 280px;
+            top: -80px;
+            left: -60px;
+            background: var(--accent-1);
+        }
+
+        .orb-2 {
+            width: 260px;
+            height: 260px;
+            top: 240px;
+            right: -80px;
+            background: var(--accent-2);
+        }
+
+        body.kids-mode .ambient-orb {
+            opacity: 0.25;
+        }
+
+        /* Floating Decorations for Kids/Category Themes */
+        .theme-decorations {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .floating-emoji {
+            position: absolute;
+            font-size: 22px;
+            opacity: 0.16;
+            animation: floatSlow 8s ease-in-out infinite;
+        }
+
+        body.kids-mode .floating-emoji {
+            opacity: 0.32;
+            font-size: 26px;
+        }
+
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-16px) rotate(8deg); }
+        }
+
+        /* =========================================================
+           TOP HEADER & 3-LANGUAGE SWITCHER
+           ========================================================= */
+        .top-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--card-border);
+            padding: 12px 16px;
+            transition: all 0.35s ease;
+        }
+
+        .header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 13px;
+            background: var(--accent-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+            box-shadow: var(--shadow-glow);
+            flex-shrink: 0;
+        }
+
+        .brand-title {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 0.4px;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+        }
+
+        body.kids-mode .brand-title {
+            background: linear-gradient(135deg, #0284c7, #ec4899, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-sub {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* 3-Language Pill Switcher */
+        .lang-switcher {
+            display: flex;
+            background: rgba(148, 163, 184, 0.14);
+            padding: 3px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            gap: 2px;
+        }
+
+        .lang-btn {
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: var(--font-main);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 8px;
+            border-radius: 9px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .lang-btn.active {
+            background: var(--accent-gradient);
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+        }
+
+        /* =========================================================
+           SEARCH & QUICK CODE BAR
+           ========================================================= */
+        .search-wrap {
+            margin-top: 10px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .search-box {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box input {
+            width: 100%;
+            background: rgba(148, 163, 184, 0.12);
+            border: 1.5px solid var(--card-border);
+            color: var(--text-primary);
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--pill-radius);
+            font-family: var(--font-main);
+            font-size: 13.5px;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+
+        .search-box input::placeholder {
             color: var(--text-secondary);
         }
 
-        .container {
-            padding: 15px;
+        .search-box input:focus {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18);
         }
 
-        .section-title {
-            font-size: 18px;
-            margin-bottom: 15px;
-            font-weight: 600;
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            font-size: 15px;
+            pointer-events: none;
+        }
+
+        .code-quick-btn {
+            border: none;
+            background: var(--accent-gradient);
+            color: #fff;
+            font-family: var(--font-main);
+            font-weight: 700;
+            font-size: 12.5px;
+            padding: 0 13px;
+            border-radius: var(--pill-radius);
+            cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 5px;
+            white-space: nowrap;
+            box-shadow: var(--shadow-glow);
+            transition: transform 0.15s ease;
+        }
+
+        .code-quick-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* =========================================================
+           MAIN CONTENT CONTAINER
+           ========================================================= */
+        .app-content {
+            position: relative;
+            z-index: 1;
+            padding: 14px 15px;
+        }
+
+        /* =========================================================
+           DYNAMIC CATEGORY HERO BANNER
+           ========================================================= */
+        .category-hero {
+            position: relative;
+            border-radius: var(--card-radius);
+            background: var(--banner-gradient);
+            padding: 20px 18px;
+            margin-bottom: 18px;
+            color: #ffffff;
+            overflow: hidden;
+            box-shadow: var(--shadow-glow);
+            border: 1.5px solid rgba(255, 255, 255, 0.18);
+            transition: all 0.4s ease;
+        }
+
+        .category-hero::after {
+            content: '';
+            position: absolute;
+            right: -30px;
+            bottom: -30px;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(6px);
+            padding: 4px 11px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 8px;
+        }
+
+        .hero-main-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .hero-text h2 {
+            font-size: 22px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.25);
+        }
+
+        .hero-text p {
+            font-size: 12.5px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.4;
+            max-width: 260px;
+        }
+
+        .hero-big-icon {
+            font-size: 52px;
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.3));
+            animation: pulseIcon 3s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes pulseIcon {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.08) rotate(5deg); }
+        }
+
+        /* =========================================================
+           HORIZONTAL CATEGORY PILLS / CHIPS
+           ========================================================= */
+        .categories-strip-wrap {
+            margin-bottom: 18px;
+        }
+
+        .strip-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .strip-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .categories-scroll {
+            display: flex;
+            gap: 9px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            scrollbar-width: none;
+        }
+
+        .categories-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .cat-chip {
+            border: 1.5px solid var(--card-border);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            padding: 9px 14px;
+            border-radius: var(--pill-radius);
+            font-family: var(--font-main);
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .cat-chip .chip-emoji {
+            font-size: 16px;
+        }
+
+        .cat-chip.active {
+            background: var(--accent-gradient);
+            color: #ffffff;
+            border-color: transparent;
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: var(--shadow-glow);
+        }
+
+        body.kids-mode .cat-chip {
+            border-width: 2px;
+            font-weight: 700;
+            padding: 10px 16px;
+        }
+
+        /* =========================================================
+           HOME QUICK PORTALS (MOVIES vs CARTOONS + GENRE CARDS)
+           ========================================================= */
+        .main-portals {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .portal-card {
+            border-radius: 20px;
+            padding: 16px 14px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            box-shadow: 0 8px 22px rgba(0,0,0,0.28);
+            border: 1.5px solid rgba(255,255,255,0.2);
+        }
+
+        .portal-card:active {
+            transform: scale(0.96);
+        }
+
+        .portal-movies {
+            background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 50%, #0284c7 100%);
+        }
+
+        .portal-cartoons {
+            background: linear-gradient(135deg, #f43f5e 0%, #fb923c 50%, #facc15 100%);
+        }
+
+        .portal-icon {
+            font-size: 34px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .portal-title {
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 3px;
+        }
+
+        .portal-sub {
+            font-size: 11px;
+            opacity: 0.92;
+            font-weight: 500;
+        }
+
+        /* =========================================================
+           GENRE VISUAL GRID (ON MOVIES & CARTOONS TABS)
+           ========================================================= */
+        .genre-bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 9px;
+            margin-bottom: 20px;
+        }
+
+        .genre-bento-card {
+            border-radius: 16px;
+            padding: 11px 8px;
+            text-align: center;
+            color: #fff;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border: 1.5px solid rgba(255, 255, 255, 0.18);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            min-height: 82px;
+        }
+
+        .genre-bento-card:active {
+            transform: scale(0.94);
+        }
+
+        .genre-bento-card.selected-bento {
+            border: 2.5px solid #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+        }
+
+        .genre-bento-emoji {
+            font-size: 25px;
+            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.25));
+        }
+
+        .genre-bento-name {
+            font-size: 11.5px;
+            font-weight: 700;
+            line-height: 1.15;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+        }
+
+        body.kids-mode .genre-bento-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        body.kids-mode .genre-bento-card {
+            border-radius: 22px;
+            min-height: 94px;
+            border-width: 2.5px;
+        }
+
+        /* =========================================================
+           MOVIES & CARTOONS CARDS GRID
+           ========================================================= */
+        .section-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 13px;
+        }
+
+        .section-heading h3 {
+            font-size: 17px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .count-pill {
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 999px;
+            background: rgba(148, 163, 184, 0.16);
+            color: var(--text-secondary);
         }
 
         .movies-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            gap: 14px;
         }
 
         .movie-card {
-            background-color: var(--card-bg);
-            border-radius: 12px;
+            background: var(--bg-card);
+            border: 1.5px solid var(--card-border);
+            border-radius: var(--card-radius);
             overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            transition: transform 0.2s;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        body.kids-mode .movie-card {
+            border-width: 2.5px;
+            box-shadow: 0 10px 24px rgba(2, 132, 199, 0.14);
         }
 
         .movie-card:active {
-            transform: scale(0.97);
+            transform: scale(0.96);
+        }
+
+        /* Retro Film Strip Perforation Effect when in Retro Category */
+        body[data-cat="retro_movie"] .movie-card,
+        body[data-cat="retro_cartoon"] .movie-card {
+            border-style: dashed;
+            border-width: 2px;
         }
 
         .movie-poster {
             width: 100%;
-            height: 160px;
-            background-color: #334155;
+            height: 172px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .poster-art-emoji {
+            font-size: 54px;
+            filter: drop-shadow(0 6px 14px rgba(0,0,0,0.35));
+            transition: transform 0.3s ease;
+            z-index: 2;
+        }
+
+        .movie-card:hover .poster-art-emoji {
+            transform: scale(1.1) rotate(-3deg);
+        }
+
+        .poster-code-tag {
+            position: absolute;
+            top: 9px;
+            left: 9px;
+            background: rgba(0, 0, 0, 0.68);
+            backdrop-filter: blur(6px);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            z-index: 3;
+        }
+
+        .poster-rating-tag {
+            position: absolute;
+            top: 9px;
+            right: 9px;
+            background: rgba(245, 158, 11, 0.92);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 7px;
+            border-radius: 8px;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .poster-quality-tag {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(255, 255, 255, 0.22);
+            backdrop-filter: blur(6px);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 6px;
+            z-index: 3;
+        }
+
+        .fav-heart-btn {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 30px;
-            color: var(--text-secondary);
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 4;
         }
 
         .movie-info {
-            padding: 10px;
+            padding: 11px 12px 13px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            justify-content: space-between;
         }
 
         .movie-title {
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 700;
+            line-height: 1.25;
             margin-bottom: 5px;
-            white-space: nowrap;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
             overflow: hidden;
-            text-overflow: ellipsis;
         }
 
-        .movie-badge {
+        .movie-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             font-size: 11px;
-            background: var(--accent-color);
-            color: white;
-            padding: 2px 6px;
-            border-radius: 4px;
-            display: inline-block;
+            color: var(--text-secondary);
+            margin-bottom: 9px;
+            font-weight: 600;
         }
 
-        /* PASTKI IDEAL MENYU (BAR) */
+        .watch-card-btn {
+            width: 100%;
+            border: none;
+            background: var(--accent-gradient);
+            color: #fff;
+            font-family: var(--font-main);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 8px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        body.kids-mode .watch-card-btn {
+            border-radius: 999px;
+            font-size: 12.5px;
+        }
+
+        /* =========================================================
+           DETAIL MODAL & CODE FINDER MODAL
+           ========================================================= */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.72);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-sheet {
+            width: 100%;
+            max-width: 500px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-top-left-radius: 28px;
+            border-top-right-radius: 28px;
+            padding: 20px 18px 28px;
+            border-top: 2px solid var(--card-border);
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        body.kids-mode .modal-sheet {
+            background: #ffffff;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-handle {
+            width: 44px;
+            height: 5px;
+            background: rgba(148, 163, 184, 0.4);
+            border-radius: 999px;
+            margin: 0 auto 16px;
+        }
+
+        .detail-banner {
+            height: 180px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 74px;
+            position: relative;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .detail-code-pill {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            background: rgba(0, 0, 0, 0.75);
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .detail-title {
+            font-size: 21px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .detail-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-bottom: 12px;
+        }
+
+        .detail-tag {
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 8px;
+            background: rgba(148, 163, 184, 0.16);
+            color: var(--text-primary);
+        }
+
+        .detail-desc {
+            font-size: 13.5px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            margin-bottom: 18px;
+        }
+
+        .detail-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-primary-watch {
+            width: 100%;
+            border: none;
+            background: var(--accent-gradient);
+            color: #fff;
+            font-family: var(--font-main);
+            font-size: 15px;
+            font-weight: 800;
+            padding: 14px;
+            border-radius: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .btn-secondary-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-outline {
+            border: 1.5px solid var(--card-border);
+            background: rgba(148, 163, 184, 0.1);
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            font-size: 13px;
+            font-weight: 700;
+            padding: 11px;
+            border-radius: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* Code Lookup Modal Input */
+        .code-input-big {
+            width: 100%;
+            text-align: center;
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            padding: 14px;
+            border-radius: 16px;
+            border: 2px solid var(--accent-1);
+            background: rgba(148, 163, 184, 0.1);
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            margin: 14px 0;
+            outline: none;
+        }
+
+        /* =========================================================
+           BOTTOM NAVIGATION BAR
+           ========================================================= */
         .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 65px;
-            background: rgba(30, 41, 59, 0.95);
-            backdrop-filter: blur(10px);
+            height: 72px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
             display: flex;
             justify-content: space-around;
             align-items: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1.5px solid var(--card-border);
             z-index: 1000;
+            padding: 0 6px;
         }
 
         .nav-item {
+            flex: 1;
+            border: none;
+            background: transparent;
             display: flex;
             flex-direction: column;
             align-items: center;
-            text-decoration: none;
+            justify-content: center;
             color: var(--text-secondary);
+            font-family: var(--font-main);
             font-size: 11px;
-            transition: 0.2s;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 6px 0;
+            border-radius: 14px;
+            transition: all 0.25s ease;
+            gap: 3px;
         }
 
-        .nav-item span {
-            font-size: 20px;
-            margin-bottom: 2px;
+        .nav-item .nav-icon {
+            font-size: 22px;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        .nav-item.active, .nav-item:hover {
-            color: #38bdf8;
+        .nav-item.active {
+            color: var(--accent-1);
+        }
+
+        body.kids-mode .nav-item.active {
+            color: #ec4899;
+        }
+
+        .nav-item.active .nav-icon {
+            transform: translateY(-3px) scale(1.18);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 76px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: #10b981;
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            z-index: 3000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Profile / Saved Section Card */
+        .profile-card {
+            background: var(--bg-card);
+            border: 1.5px solid var(--card-border);
+            border-radius: var(--card-radius);
+            padding: 18px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .profile-avatar {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 36px 20px;
+            background: var(--bg-card);
+            border-radius: var(--card-radius);
+            border: 1.5px dashed var(--card-border);
+            margin-top: 10px;
+        }
+
+        .empty-state .empty-icon {
+            font-size: 46px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
-<body>
+<body data-tab="home" data-cat="all">
 
-    <div class="header">
-        <h1>🎬 MOVITIMECN</h1>
-        <p>Eng Sara Kinolar va Multfilmlar Olami</p>
+    <!-- Dynamic Ambient Glows & Floating Theme Emojis -->
+    <div class="ambient-bg">
+        <div class="ambient-orb orb-1" id="orb1"></div>
+        <div class="ambient-orb orb-2" id="orb2"></div>
     </div>
+    <div class="theme-decorations" id="themeDecorations"></div>
 
-    <div class="container">
-        <div class="section-title">🔥 Ommabop Kinolar</div>
-        
-        <div class="movies-grid">
-            <div class="movie-card">
-                <div class="movie-poster">🍿</div>
-                <div class="movie-info">
-                    <div class="movie-title">Film 1 nomi</div>
-                    <span class="movie-badge">1080p HD</span>
+    <!-- Toast Notification -->
+    <div class="toast" id="toastBox">✅ OK</div>
+
+    <!-- TOP STICKY HEADER -->
+    <header class="top-header">
+        <div class="header-row">
+            <div class="brand-box" onclick="switchTab('home')">
+                <div class="brand-logo" id="brandLogo">🎬</div>
+                <div>
+                    <div class="brand-title">MOVITIMECN</div>
+                    <div class="brand-sub" id="brandSubtitle">Cinema & Cartoon World</div>
                 </div>
             </div>
 
-            <div class="movie-card">
-                <div class="movie-poster">🎬</div>
-                <div class="movie-info">
-                    <div class="movie-title">Film 2 nomi</div>
-                    <span class="movie-badge">1080p HD</span>
-                </div>
+            <!-- 3 LANGUAGE SWITCHER (UZ / RU / EN) -->
+            <div class="lang-switcher">
+                <button class="lang-btn active" id="langBtn_uz" onclick="setLanguage('uz')">🇺🇿 UZ</button>
+                <button class="lang-btn" id="langBtn_ru" onclick="setLanguage('ru')">🇷🇺 RU</button>
+                <button class="lang-btn" id="langBtn_en" onclick="setLanguage('en')">🇬🇧 EN</button>
+            </div>
+        </div>
+
+        <!-- SEARCH & ENTER CODE BAR -->
+        <div class="search-wrap">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Kino nomi yoki kodini yozing..." oninput="handleSearch()">
+            </div>
+            <button class="code-quick-btn" onclick="openCodeModal()" id="quickCodeBtn">
+                🔢 <span>Kod</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN DYNAMIC CONTENT -->
+    <main class="app-content" id="appContent"></main>
+
+    <!-- MOVIE / CARTOON DETAIL MODAL -->
+    <div class="modal-overlay" id="detailModal" onclick="if(event.target===this) closeDetailModal()">
+        <div class="modal-sheet" id="detailSheetContent"></div>
+    </div>
+
+    <!-- CODE LOOKUP MODAL -->
+    <div class="modal-overlay" id="codeModal" onclick="if(event.target===this) closeCodeModal()">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <h3 id="codeModalTitle" style="font-size:19px;font-weight:800;text-align:center;">🔢 Kino yoki Multfilm Kodini Kiriting</h3>
+            <p id="codeModalSub" style="font-size:13px;color:var(--text-secondary);text-align:center;margin-top:4px;">
+                Instagram yoki Telegram kanalimizdagi maxsus kodni yozing:
+            </p>
+            <input type="text" id="customCodeInput" class="code-input-big" placeholder="101">
+            <div class="detail-actions">
+                <button class="btn-primary-watch" onclick="submitCustomCode()" id="codeModalWatchBtn">
+                    ▶️ Botda Tomosha Qilish
+                </button>
+                <button class="btn-outline" onclick="closeCodeModal()" id="codeModalCancelBtn" style="width:100%;">
+                    ✖ Yopish
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Pastki qismdagi ideal menyu -->
-    <div class="bottom-nav">
-        <a href="#" class="nav-item active">
-            <span>🏠</span>
-            Asosiy
-        </a>
-        <a href="#" class="nav-item">
-            <span>🎥</span>
-            Kinolar
-        </a>
-        <a href="#" class="nav-item">
-            <span>🧸</span>
-            Multfilmlar
-        </a>
-        <a href="#" class="nav-item">
-            <span>👤</span>
-            Profil
-        </a>
-    </div>
+    <!-- BOTTOM NAVIGATION BAR -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" id="nav_home" onclick="switchTab('home')">
+            <span class="nav-icon">🏠</span>
+            <span id="navLabel_home">Asosiy</span>
+        </button>
+        <button class="nav-item" id="nav_movies" onclick="switchTab('movies')">
+            <span class="nav-icon">🎬</span>
+            <span id="navLabel_movies">Kinolar</span>
+        </button>
+        <button class="nav-item" id="nav_cartoons" onclick="switchTab('cartoons')">
+            <span class="nav-icon">🧸</span>
+            <span id="navLabel_cartoons">Multfilmlar</span>
+        </button>
+        <button class="nav-item" id="nav_saved" onclick="switchTab('saved')">
+            <span class="nav-icon">❤️</span>
+            <span id="navLabel_saved">Saqlangan</span>
+        </button>
+    </nav>
 
     <script>
-        let tg = window.Telegram.WebApp;
-        tg.expand(); // Mini App'ni to'liq ekranga ochish
+        // =========================================================
+        // TELEGRAM WEBAPP INITIALIZATION
+        // =========================================================
+        const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+        if (tg) {
+            tg.ready();
+            tg.expand();
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const botUsername = urlParams.get('bot') || 'movitimecn_bot';
+
+        // =========================================================
+        // 3-LANGUAGE TRANSLATIONS (UZ, RU, EN)
+        // =========================================================
+        const I18N = {
+            uz: {
+                subtitle: "Eng Sara Kinolar va Multfilmlar Olami",
+                searchPlaceholder: "Kino nomi, janri yoki kodini yozing (#1)...",
+                codeBtn: "Kod",
+                navHome: "Asosiy",
+                navMovies: "Kinolar",
+                navCartoons: "Multfilmlar",
+                navSaved: "Saqlangan",
+                portalMoviesTitle: "Kinolar Olami",
+                portalMoviesSub: "9 ta maxsus janr • Full HD",
+                portalCartoonsTitle: "Bolajonlar Olami",
+                portalCartoonsSub: "Yorqin multfilmlar • 3 bo'lim",
+                chooseMovieGenre: "🎬 Kino Kategoriyalari (Mavzuga mos dizayn)",
+                chooseCartoonGenre: "🌈 Multfilm Bo'limlari (Bolajonlar uchun)",
+                allMovies: "Barchasi",
+                allCartoons: "Barchasi",
+                watchBtn: "Tomosha qilish",
+                openInBotBtn: "▶️ Botda Tomosha Qilish",
+                copyCodeBtn: "📋 Kodni nusxalash",
+                closeBtn: "✖ Yopish",
+                codeCopied: "✅ Kod nusxalandi: #",
+                sendingToBot: "🚀 Botga yuborilmoqda: #",
+                popularNow: "🔥 Trenddagi Kinolar va Multfilmlar",
+                itemsCount: "ta kontent",
+                codeModalTitle: "🔢 Kino yoki Multfilm Kodini Kiriting",
+                codeModalSub: "Instagram yoki Telegram kanalimizdagi maxsus kodni yozing:",
+                savedTitle: "❤️ Sevimli Kinolar va Multfilmlar",
+                savedEmpty: "Siz hali hech qanday kino yoki multfilmni ❤️ belgisini bosib saqlamadingiz.",
+                kidsBadge: "🌈 Bolajonlar Maxsus Yorqin Rejimi",
+                cinemaBadge: "🎬 MOVITIMECN • IMAX CINEMA",
+                yearLabel: "Yili",
+                qualityLabel: "Sifati",
+                codeLabel: "Kodi"
+            },
+            ru: {
+                subtitle: "Мир Лучших Фильмов и Мультфильмов",
+                searchPlaceholder: "Название фильма, жанр или код (#1)...",
+                codeBtn: "Код",
+                navHome: "Главная",
+                navMovies: "Фильмы",
+                navCartoons: "Мультфильмы",
+                navSaved: "Избранное",
+                portalMoviesTitle: "Мир Кино",
+                portalMoviesSub: "9 тематических жанров • HD",
+                portalCartoonsTitle: "Детский Мир",
+                portalCartoonsSub: "Яркие мультфильмы • 3 раздела",
+                chooseMovieGenre: "🎬 Категории Фильмов (Тематический стиль)",
+                chooseCartoonGenre: "🌈 Разделы Мультфильмов (Для детей)",
+                allMovies: "Все",
+                allCartoons: "Все",
+                watchBtn: "Смотреть",
+                openInBotBtn: "▶️ Смотреть в Боте",
+                copyCodeBtn: "📋 Скопировать код",
+                closeBtn: "✖ Закрыть",
+                codeCopied: "✅ Код скопирован: #",
+                sendingToBot: "🚀 Отправка в бот: #",
+                popularNow: "🔥 Популярные Фильмы и Мультфильмы",
+                itemsCount: "доступно",
+                codeModalTitle: "🔢 Введите Код Фильма или Мультфильма",
+                codeModalSub: "Введите специальный код из нашего Instagram или Telegram:",
+                savedTitle: "❤️ Избранные Фильмы и Мультфильмы",
+                savedEmpty: "Вы еще не добавили фильмы или мультфильмы в избранное (нажмите ❤️ на карточке).",
+                kidsBadge: "🌈 Яркий Детский Режим",
+                cinemaBadge: "🎬 MOVITIMECN • IMAX CINEMA",
+                yearLabel: "Год",
+                qualityLabel: "Качество",
+                codeLabel: "Код"
+            },
+            en: {
+                subtitle: "Ultimate World of Movies & Cartoons",
+                searchPlaceholder: "Search movie title, genre or code (#1)...",
+                codeBtn: "Code",
+                navHome: "Home",
+                navMovies: "Movies",
+                navCartoons: "Cartoons",
+                navSaved: "Saved",
+                portalMoviesTitle: "Movies World",
+                portalMoviesSub: "9 Themed Genres • Full HD",
+                portalCartoonsTitle: "Kids & Cartoons",
+                portalCartoonsSub: "Bright & Magical • 3 Sections",
+                chooseMovieGenre: "🎬 Movie Categories (Custom Themed Styles)",
+                chooseCartoonGenre: "🌈 Cartoon Sections (Kid-Friendly Design)",
+                allMovies: "All",
+                allCartoons: "All",
+                watchBtn: "Watch Now",
+                openInBotBtn: "▶️ Watch in Telegram Bot",
+                copyCodeBtn: "📋 Copy Code",
+                closeBtn: "✖ Close",
+                codeCopied: "✅ Code copied: #",
+                sendingToBot: "🚀 Opening in bot: #",
+                popularNow: "🔥 Trending Movies & Cartoons",
+                itemsCount: "titles",
+                codeModalTitle: "🔢 Enter Movie or Cartoon Code",
+                codeModalSub: "Type the special code from our Instagram or Telegram channel:",
+                savedTitle: "❤️ Saved Movies & Cartoons",
+                savedEmpty: "You haven't saved any movies or cartoons yet. Tap ❤️ on any card to save it!",
+                kidsBadge: "🌈 Kid-Friendly Bright Wonderland Mode",
+                cinemaBadge: "🎬 MOVITIMECN • IMAX CINEMA",
+                yearLabel: "Year",
+                qualityLabel: "Quality",
+                codeLabel: "Code"
+            }
+        };
+
+        // =========================================================
+        // HAR BIR KATEGORIYA UCHUN MAXSUS MAVZULI DIZAYN VA RANG PALITRASI
+        // =========================================================
+        const CATEGORY_THEMES = {
+            // --- HOME & ALL ---
+            home: {
+                icon: "🍿",
+                bgMain: "#080c16",
+                bgCard: "rgba(23, 33, 53, 0.88)",
+                accent1: "#38bdf8",
+                accent2: "#6366f1",
+                gradient: "linear-gradient(135deg, #38bdf8 0%, #6366f1 100%)",
+                bannerGradient: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0369a1 100%)",
+                emojis: ["🎬", "🍿", "✨", "🎥", "🌟"],
+                title: { uz: "Kino va Multfilmlar Olami", ru: "Мир Кино и Мультфильмов", en: "World of Movies & Cartoons" },
+                desc: {
+                    uz: "Har bir bo'lim o'zining betakror dizayni va atmosferasiga ega! Kod orqali qidiring yoki janrni tanlang.",
+                    ru: "Каждый раздел оформлен в уникальном тематическом стиле! Ищите по коду или выбирайте жанр.",
+                    en: "Every category transforms the app with its own custom visual theme! Search by code or pick a genre."
+                }
+            },
+            all_movies: {
+                icon: "🎬",
+                bgMain: "#090d18",
+                bgCard: "rgba(24, 34, 56, 0.9)",
+                accent1: "#38bdf8",
+                accent2: "#818cf8",
+                gradient: "linear-gradient(135deg, #0284c7 0%, #6366f1 100%)",
+                bannerGradient: "linear-gradient(135deg, #0f172a 0%, #312e81 55%, #0284c7 100%)",
+                emojis: ["🎬", "🎞️", "🍿", "🎥"],
+                title: { uz: "Barcha Sara Kinolar", ru: "Все Лучшие Фильмы", en: "All Featured Movies" },
+                desc: {
+                    uz: "9 xil janrdagi eng mashhur kinolar jamlanmasi — yuqori 1080p HD sifatda.",
+                    ru: "Коллекция лучших фильмов в 9 тематических жанрах в качестве 1080p HD.",
+                    en: "Complete collection across all 9 movie genres in crystal-clear 1080p HD."
+                }
+            },
+
+            // --- 9 MOVIE CATEGORIES ---
+            series: {
+                icon: "📺",
+                bgMain: "#12070b",
+                bgCard: "rgba(42, 14, 24, 0.88)",
+                accent1: "#f43f5e",
+                accent2: "#e11d48",
+                gradient: "linear-gradient(135deg, #e11d48 0%, #9f1239 100%)",
+                bannerGradient: "linear-gradient(135deg, #4c0519 0%, #be123c 60%, #fb7185 100%)",
+                emojis: ["📺", "🍿", "🔥", "🎬"],
+                title: { uz: "Seriallar", ru: "Сериалы", en: "TV Series" },
+                desc: {
+                    uz: "Ketma-ket qismlardan uzilolmay ko'radigan eng qiziqarli dunyo va o'zbek seriallari!",
+                    ru: "Захватывающие сериалы со всего мира с полными сезонами и сериями!",
+                    en: "Binge-worthy TV series and multi-season marathons you won't be able to pause!"
+                }
+            },
+            family: {
+                icon: "👨‍👩‍👧‍👦",
+                bgMain: "#081713",
+                bgCard: "rgba(16, 44, 36, 0.88)",
+                accent1: "#10b981",
+                accent2: "#f59e0b",
+                gradient: "linear-gradient(135deg, #10b981 0%, #f59e0b 100%)",
+                bannerGradient: "linear-gradient(135deg, #065f46 0%, #059669 55%, #d97706 100%)",
+                emojis: ["👨‍👩‍👧‍👦", "🏡", "💛", "🍿", "✨"],
+                title: { uz: "Oilaviy Kinolar", ru: "Семейные Фильмы", en: "Family Movies" },
+                desc: {
+                    uz: "Ota-ona, farzandlar va butun oila davrasida mehr bilan tomosha qilinadigan samimiy filmlar.",
+                    ru: "Добрые и душевные фильмы для уютного просмотра всей семьей.",
+                    en: "Heartwarming, wholesome movies made to enjoy together with the whole family."
+                }
+            },
+            scifi: {
+                icon: "🚀",
+                bgMain: "#070516",
+                bgCard: "rgba(25, 16, 56, 0.88)",
+                accent1: "#06b6d4",
+                accent2: "#a855f7",
+                gradient: "linear-gradient(135deg, #06b6d4 0%, #9333ea 100%)",
+                bannerGradient: "linear-gradient(135deg, #2e1065 0%, #6d28d9 50%, #0891b2 100%)",
+                emojis: ["🚀", "🪐", "👽", "🌌", "⚡"],
+                title: { uz: "Fantastik Kinolar", ru: "Фантастика", en: "Sci-Fi & Fantasy" },
+                desc: {
+                    uz: "Koinot sirlari, kelajak texnologiyalari, superqahramonlar va sehrli olamlar!",
+                    ru: "Космические путешествия, технологии будущего, супергерои и магия!",
+                    en: "Interstellar voyages, futuristic worlds, superheroes, and mind-bending sci-fi!"
+                }
+            },
+            action: {
+                icon: "🔥",
+                bgMain: "#160907",
+                bgCard: "rgba(48, 20, 14, 0.9)",
+                accent1: "#f97316",
+                accent2: "#ef4444",
+                gradient: "linear-gradient(135deg, #ef4444 0%, #f97316 100%)",
+                bannerGradient: "linear-gradient(135deg, #7f1d1d 0%, #dc2626 55%, #f97316 100%)",
+                emojis: ["🔥", "💥", "🏎️", "⚔️", "💣"],
+                title: { uz: "Jangari Kinolar", ru: "Боевики", en: "Action Movies" },
+                desc: {
+                    uz: "Yuqori adrenalin, shiddatli to'qnashuvlar, poygalar va qahramonlik sahnalari!",
+                    ru: "Чистый адреналин, динамичные погони, спецэффекты и эпические битвы!",
+                    en: "High-octane adrenaline, explosive stunts, tactical missions, and epic battles!"
+                }
+            },
+            drama: {
+                icon: "🎭",
+                bgMain: "#140b1c",
+                bgCard: "rgba(39, 22, 54, 0.88)",
+                accent1: "#eab308",
+                accent2: "#a855f7",
+                gradient: "linear-gradient(135deg, #ca8a04 0%, #9333ea 100%)",
+                bannerGradient: "linear-gradient(135deg, #3b0764 0%, #6b21a8 55%, #b45309 100%)",
+                emojis: ["🎭", "🏆", "🎻", "🌹", "✨"],
+                title: { uz: "Drama", ru: "Драма", en: "Drama" },
+                desc: {
+                    uz: "Qalbni larzaga soluvchi hayotiy voqealar, chuqur ma'no va mahoratli ijrolar.",
+                    ru: "Глубокие жизненные истории, сильные эмоции и шедевры мирового кино.",
+                    en: "Deeply moving human stories, emotional masterpieces, and award-winning cinema."
+                }
+            },
+            anime: {
+                icon: "🌸",
+                bgMain: "#17081c",
+                bgCard: "rgba(49, 16, 58, 0.88)",
+                accent1: "#ec4899",
+                accent2: "#8b5cf6",
+                gradient: "linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)",
+                bannerGradient: "linear-gradient(135deg, #701a75 0%, #db2777 55%, #7c3aed 100%)",
+                emojis: ["🌸", "⛩️", "🗡️", "🍜", "✨"],
+                title: { uz: "Anime", ru: "Аниме", en: "Anime" },
+                desc: {
+                    uz: "Yaponiya animatsiya san'atining eng mashhur afsonaviy anime film va seriallari!",
+                    ru: "Легендарные японские аниме-фильмы и сериалы в великолепной озвучке!",
+                    en: "Legendary Japanese anime movies and series packed with emotion and style!"
+                }
+            },
+            sport: {
+                icon: "🏆",
+                bgMain: "#06170e",
+                bgCard: "rgba(14, 46, 28, 0.9)",
+                accent1: "#22c55e",
+                accent2: "#eab308",
+                gradient: "linear-gradient(135deg, #16a34a 0%, #eab308 100%)",
+                bannerGradient: "linear-gradient(135deg, #14532d 0%, #16a34a 55%, #ca8a04 100%)",
+                emojis: ["🏆", "⚽", "🥊", "🥇", "⚡"],
+                title: { uz: "Sport Kinolar", ru: "Спортивные", en: "Sports Movies" },
+                desc: {
+                    uz: "Chempionlar irodasi, boks, futbol va g'alabaga eltuvchi motivatsion sport filmlari!",
+                    ru: "Мотивационные фильмы о воле к победе, футболе, боксе и великих чемпионах!",
+                    en: "Inspiring stories of champions, boxing, football, and unstoppable determination!"
+                }
+            },
+            retro_movie: {
+                icon: "🎞️",
+                bgMain: "#1a120b",
+                bgCard: "rgba(48, 33, 18, 0.9)",
+                accent1: "#f59e0b",
+                accent2: "#b45309",
+                gradient: "linear-gradient(135deg, #d97706 0%, #92400e 100%)",
+                bannerGradient: "linear-gradient(135deg, #451a03 0%, #92400e 55%, #d97706 100%)",
+                emojis: ["🎞️", "📽️", "🕰️", "🎩", "🌟"],
+                title: { uz: "Retro Kinolar", ru: "Ретро Фильмы", en: "Retro Movies" },
+                desc: {
+                    uz: "Vaqt sinovidan o'tgan oltin klassika — sog'inchli va unutilmas retro filmlar!",
+                    ru: "Золотая классика мирового кино, проверенная временем и любимая поколениями!",
+                    en: "Timeless golden-era classics and unforgettable vintage cinema masterpieces!"
+                }
+            },
+            national: {
+                icon: "🇺🇿",
+                bgMain: "#061621",
+                bgCard: "rgba(12, 42, 62, 0.9)",
+                accent1: "#0ea5e9",
+                accent2: "#14b8a6",
+                gradient: "linear-gradient(135deg, #0284c7 0%, #0d9488 60%, #eab308 100%)",
+                bannerGradient: "linear-gradient(135deg, #0c4a6e 0%, #0284c7 50%, #0d9488 100%)",
+                emojis: ["🇺🇿", "🏛️", "✨", "🎬", "🌟"],
+                title: { uz: "Milliy Kinolar", ru: "Национальное Кино", en: "National Movies" },
+                desc: {
+                    uz: "O'zbekistonning eng sara milliy filmlari, tarixiy dostonlar va zamonaviy kartinalar!",
+                    ru: "Лучшие узбекские национальные фильмы, исторические картины и современные хиты!",
+                    en: "The finest Uzbek national cinema, rich cultural stories, and modern classics!"
+                }
+            },
+
+            // --- CARTOONS (BOLAJONLAR UCHUN YORQIN DIZAYNLAR) ---
+            all_cartoons: {
+                icon: "🧸",
+                kids: true,
+                accent1: "#0284c7",
+                accent2: "#ec4899",
+                gradient: "linear-gradient(135deg, #FF6B6B 0%, #FF8E53 50%, #f59e0b 100%)",
+                bannerGradient: "linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 50%, #ec4899 100%)",
+                emojis: ["🧸", "🌈", "🎈", "🦄", "⭐", "🍭"],
+                title: { uz: "Bolajonlar Multfilmlar Olami", ru: "Волшебный Мир Мультфильмов", en: "Magical Cartoon Wonderland" },
+                desc: {
+                    uz: "Bolajonlar va butun oila uchun yorqin, quvnoq va tarbiyaviy multfilmlar!",
+                    ru: "Яркие, добрые и веселые мультфильмы для детей и всей семьи!",
+                    en: "Bright, colorful, and joyful animated adventures for kids and the whole family!"
+                }
+            },
+            new_cartoon: {
+                icon: "🌟",
+                kids: true,
+                accent1: "#0284c7",
+                accent2: "#f59e0b",
+                gradient: "linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)",
+                bannerGradient: "linear-gradient(135deg, #0284c7 0%, #38bdf8 50%, #f59e0b 100%)",
+                emojis: ["🌟", "🚀", "🎈", "🦁", "✨", "🎉"],
+                title: { uz: "Yangi Multfilmlar", ru: "Новые Мультфильмы", en: "New Cartoons" },
+                desc: {
+                    uz: "Eng so'nggi chiqqan 3D Pixar va Disney uslubidagi yangi multfilm premyeralari!",
+                    ru: "Самые свежие премьеры полнометражных 3D мультфильмов в высоком качестве!",
+                    en: "Brand-new 3D animated blockbusters and magical premieres!"
+                }
+            },
+            series_cartoon: {
+                icon: "📺",
+                kids: true,
+                accent1: "#d946ef",
+                accent2: "#f97316",
+                gradient: "linear-gradient(135deg, #d946ef 0%, #ec4899 50%, #f97316 100%)",
+                bannerGradient: "linear-gradient(135deg, #9333ea 0%, #ec4899 55%, #f97316 100%)",
+                emojis: ["📺", "🐾", "🐼", "🍭", "🎨", "⚡"],
+                title: { uz: "Serialli Multfilmlar", ru: "Мультсериалы", en: "Animated Series" },
+                desc: {
+                    uz: "Bolajonlar har kuni sevib tomosha qiladigan ko'p qismli quvnoq multseriallar!",
+                    ru: "Любимые многосерийные мультфильмы с веселыми героями на каждый день!",
+                    en: "Fun-filled multi-episode cartoon series with beloved characters!"
+                }
+            },
+            retro_cartoon: {
+                icon: "📼",
+                kids: true,
+                accent1: "#d97706",
+                accent2: "#ea580c",
+                gradient: "linear-gradient(135deg, #f59e0b 0%, #ea580c 100%)",
+                bannerGradient: "linear-gradient(135deg, #d97706 0%, #f59e0b 55%, #ec4899 100%)",
+                emojis: ["📼", "🐭", "🐱", "👑", "🍯", "🌟"],
+                title: { uz: "Retro Multfilmlar", ru: "Ретро Мультфильмы", en: "Retro Cartoons" },
+                desc: {
+                    uz: "Bolalikni eslatuvchi oltin davr multfilmlari: Tom va Jerri, Qirol Sher, Nu Pogodi!",
+                    ru: "Золотые мультфильмы детства: Том и Джерри, Король Лев, Ну, погоди! и другие!",
+                    en: "Golden childhood classics: Tom & Jerry, The Lion King, Aladdin, and more!"
+                }
+            }
+        };
+
+        // =========================================================
+        // KINO VA MULTFILMLAR KATALOGI (3 TILDA)
+        // =========================================================
+        const CATALOG = [
+            // --- CODE 1 (Exists in movies.db) ---
+            {
+                code: "1",
+                type: "movie",
+                category: "action",
+                year: "2024",
+                rating: "9.4",
+                quality: "1080p HD",
+                emoji: "🔥",
+                posterBg: "linear-gradient(135deg, #7f1d1d, #ef4444, #f97316)",
+                title: {
+                    uz: "Maxfiy Missiya: Qasoskor (Premyera)",
+                    ru: "Секретная Миссия: Мститель (Премьера)",
+                    en: "Secret Mission: Avenger (Premiere)"
+                },
+                desc: {
+                    uz: "Maxsus bo'linma sardori dunyoni xavfdan qutqarish uchun eng murakkab operatsiyaga kirishadi. Yuqori sifatli jangari film!",
+                    ru: "Командир спецотряда вступает в самую опасную операцию ради спасения мира. Захватывающий боевик в 1080p!",
+                    en: "A special forces commander embarks on an impossible high-stakes mission to save the world."
+                }
+            },
+            // --- SERIES ---
+            {
+                code: "101",
+                type: "movie",
+                category: "series",
+                year: "2024",
+                rating: "9.3",
+                quality: "1080p HD",
+                emoji: "🦑",
+                posterBg: "linear-gradient(135deg, #4c0519, #e11d48, #fb7185)",
+                title: {
+                    uz: "Kalmar O'yini (Barcha qismlar)",
+                    ru: "Игра в Кальмара (Все серии)",
+                    en: "Squid Game (All Episodes)"
+                },
+                desc: {
+                    uz: "Katta mukofot uchun sirli omon qolish o'yiniga kirgan ishtirokchilarning hayajonli seriali.",
+                    ru: "Захватывающий сериал о таинственной игре на выживание ради огромного приза.",
+                    en: "Thrilling survival series where contestants risk everything in mysterious childhood games."
+                }
+            },
+            {
+                code: "102",
+                type: "movie",
+                category: "series",
+                year: "2023",
+                rating: "9.1",
+                quality: "1080p HD",
+                emoji: "👑",
+                posterBg: "linear-gradient(135deg, #31102f, #9d174d, #f43f5e)",
+                title: {
+                    uz: "Qirollik Taxti: Imperiya",
+                    ru: "Королевский Трон: Империя",
+                    en: "Royal Throne: Empire Series"
+                },
+                desc: {
+                    uz: "Tarixiy saroy fitnalari, buyuk janglar va sulolalar kurashi haqida ko'p qismli serial.",
+                    ru: "Многосерийная историческая эпопея о дворцовых тайнах и великих сражениях.",
+                    en: "Epic multi-season historical series of royal dynasties and legendary battles."
+                }
+            },
+            // --- FAMILY ---
+            {
+                code: "103",
+                type: "movie",
+                category: "family",
+                year: "2024",
+                rating: "9.2",
+                quality: "1080p HD",
+                emoji: "🏡",
+                posterBg: "linear-gradient(135deg, #065f46, #10b981, #f59e0b)",
+                title: {
+                    uz: "Uyda Yolg'iz: Yangi Sarguzasht",
+                    ru: "Один Дома: Новое Приключение",
+                    en: "Home Alone: Family Adventure"
+                },
+                desc: {
+                    uz: "Butun oila bilan miriqib kulib tomosha qilinadigan quvnoq va samimiy oilaviy film!",
+                    ru: "Веселая и добрая семейная комедия для уютного вечера со всей семьей!",
+                    en: "Hilarious and heartwarming family comedy perfect for movie night together!"
+                }
+            },
+            {
+                code: "104",
+                type: "movie",
+                category: "family",
+                year: "2024",
+                rating: "8.9",
+                quality: "1080p HD",
+                emoji: "🍫",
+                posterBg: "linear-gradient(135deg, #78350f, #d97706, #10b981)",
+                title: {
+                    uz: "Vonka va Sehrli Shokolad Fabrikasi",
+                    ru: "Вонка и Шоколадная Фабрика",
+                    en: "Wonka's Magical Factory"
+                },
+                desc: {
+                    uz: "Orzularga ishonish va oilaviy mehr haqidagi ertaknamo oilaviy kino.",
+                    ru: "Волшебный семейный фильм о мечтах, дружбе и чудесах.",
+                    en: "A magical family musical adventure about dreams, kindness, and wonder."
+                }
+            },
+            // --- SCI-FI (FANTASTIK) ---
+            {
+                code: "105",
+                type: "movie",
+                category: "scifi",
+                year: "2024",
+                rating: "9.6",
+                quality: "4K / 1080p",
+                emoji: "🪐",
+                posterBg: "linear-gradient(135deg, #1e1b4b, #6d28d9, #06b6d4)",
+                title: {
+                    uz: "Interstellar: Galaktika Ortida",
+                    ru: "Интерстеллар: За Пределами Галактики",
+                    en: "Interstellar: Beyond the Galaxy"
+                },
+                desc: {
+                    uz: "Insoniyat kelajagini qutqarish uchun qora tuynuk va yangi sayyoralar sari buyuk kosmik parvoz.",
+                    ru: "Великое космическое путешествие сквозь червоточину в поисках нового дома для человечества.",
+                    en: "An awe-inspiring cosmic voyage across wormholes and distant galaxies to save humanity."
+                }
+            },
+            {
+                code: "106",
+                type: "movie",
+                category: "scifi",
+                year: "2024",
+                rating: "9.3",
+                quality: "1080p HD",
+                emoji: "🏜️",
+                posterBg: "linear-gradient(135deg, #3b0764, #7c3aed, #f59e0b)",
+                title: {
+                    uz: "Dyuna 2: Cho'l Sayyorasi",
+                    ru: "Дюна 2: Планета Песков",
+                    en: "Dune: Part Two"
+                },
+                desc: {
+                    uz: "Koinotdagi eng qimmatbaho sayyora uchun kechadigan fantastik jang.",
+                    ru: "Эпическая научно-фантастическая сага о борьбе за пустынную планету Арракис.",
+                    en: "Mythic sci-fi spectacle of destiny and rebellion on the desert planet Arrakis."
+                }
+            },
+            // --- ACTION (JANGARI) ---
+            {
+                code: "107",
+                type: "movie",
+                category: "action",
+                year: "2024",
+                rating: "9.1",
+                quality: "1080p HD",
+                emoji: "🏎️",
+                posterBg: "linear-gradient(135deg, #450a0a, #dc2626, #fb923c)",
+                title: {
+                    uz: "Forsaj X: So'nggi Poyga",
+                    ru: "Форсаж X: Последняя Гонка",
+                    en: "Fast X: Ultimate Race"
+                },
+                desc: {
+                    uz: "Superkarlar, aqlbovar qilmas tezlik va oila uchun kurash!",
+                    ru: "Суперкары, невероятные трюки и борьба за семью на максимальной скорости!",
+                    en: "Blazing supercars, gravity-defying stunts, and the ultimate fight for family!"
+                }
+            },
+            // --- DRAMA ---
+            {
+                code: "108",
+                type: "movie",
+                category: "drama",
+                year: "2024",
+                rating: "9.5",
+                quality: "1080p HD",
+                emoji: "🎭",
+                posterBg: "linear-gradient(135deg, #3b0764, #7e22ce, #eab308)",
+                title: {
+                    uz: "Oppenheymer: Tarixiy Drama",
+                    ru: "Оппенгеймер: Историческая Драма",
+                    en: "Oppenheimer"
+                },
+                desc: {
+                    uz: "Oskar mukofotiga sazovor bo'lgan, dunyo tarixini o'zgartirgan olim haqidagi kuchli drama.",
+                    ru: "Оскароносная биографическая драма о человеке, изменившем ход мировой истории.",
+                    en: "Academy Award-winning biographical drama about the man who changed history forever."
+                }
+            },
+            // --- ANIME ---
+            {
+                code: "109",
+                type: "movie",
+                category: "anime",
+                year: "2024",
+                rating: "9.6",
+                quality: "1080p HD",
+                emoji: "🗡️",
+                posterBg: "linear-gradient(135deg, #701a75, #ec4899, #8b5cf6)",
+                title: {
+                    uz: "Iblislar Qotili: Hashira Mashg'uloti",
+                    ru: "Клинок, Рассекающий Демонов",
+                    en: "Demon Slayer: Hashira Training"
+                },
+                desc: {
+                    uz: "Tanjiro va uning do'stlari eng kuchli Hashira jangchilari bilan yangi sinovlarga kirishadi!",
+                    ru: "Тандзиро и его друзья проходят суровую подготовку у сильнейших столпов!",
+                    en: "Tanjiro undergoes intense training with the legendary Hashira swordsmen!"
+                }
+            },
+            {
+                code: "110",
+                type: "movie",
+                category: "anime",
+                year: "2023",
+                rating: "9.4",
+                quality: "1080p HD",
+                emoji: "🌸",
+                posterBg: "linear-gradient(135deg, #4c1d95, #d946ef, #38bdf8)",
+                title: {
+                    uz: "Suzume: Sehrli Eshiklar",
+                    ru: "Судзумэ, Закрывающая Двери",
+                    en: "Suzume"
+                },
+                desc: {
+                    uz: "Makoto Shinkay tomonidan yaratilgan nihoyatda go'zal va ta'sirli anime sarguzasht.",
+                    ru: "Невероятно красивое аниме-приключение от режиссера Макото Синкая.",
+                    en: "Breathtaking anime journey across Japan directed by Makoto Shinkai."
+                }
+            },
+            // --- SPORT ---
+            {
+                code: "111",
+                type: "movie",
+                category: "sport",
+                year: "2024",
+                rating: "9.0",
+                quality: "1080p HD",
+                emoji: "🥊",
+                posterBg: "linear-gradient(135deg, #14532d, #16a34a, #eab308)",
+                title: {
+                    uz: "Krid 3: Chempionlar Ringi",
+                    ru: "Крид 3: Ринг Чемпионов",
+                    en: "Creed III: Champions Ring"
+                },
+                desc: {
+                    uz: "Haqiqiy chempionlik ruhi, tinimsiz mehnat va hal qiluvchi jang haqidagi sport filmi.",
+                    ru: "Мощная спортивная драма о боксе, силе духа и решающем поединке на ринге.",
+                    en: "Electrifying boxing drama about grit, legacy, and the fight of a lifetime."
+                }
+            },
+            {
+                code: "112",
+                type: "movie",
+                category: "sport",
+                year: "2023",
+                rating: "8.9",
+                quality: "1080p HD",
+                emoji: "⚽",
+                posterBg: "linear-gradient(135deg, #064e3b, #10b981, #38bdf8)",
+                title: {
+                    uz: "Gol! Orzular Stadioni",
+                    ru: "Гол! Стадион Мечты",
+                    en: "Goal! Stadium of Dreams"
+                },
+                desc: {
+                    uz: "Oddiy yigitning jahon futboli cho'qqisiga chiqish yo'lidagi unutilmas hikoyasi.",
+                    ru: "Вдохновляющая история восхождения молодого футболиста к мировой славе.",
+                    en: "An inspiring football journey from local pitches to the world's biggest stadiums."
+                }
+            },
+            // --- RETRO MOVIES ---
+            {
+                code: "113",
+                type: "movie",
+                category: "retro_movie",
+                year: "1972",
+                rating: "9.7",
+                quality: "1080p Remastered",
+                emoji: "🎩",
+                posterBg: "linear-gradient(135deg, #451a03, #92400e, #d97706)",
+                title: {
+                    uz: "Cho'qintirgan Ota (Oltin Klassika)",
+                    ru: "Крестный Отец (Золотая Классика)",
+                    en: "The Godfather (Classic)"
+                },
+                desc: {
+                    uz: "Jahon kinematografiyasining eng buyuk durdonasi — qayta tiklangan Full HD formatda.",
+                    ru: "Величайший шедевр мирового кинематографа в отреставрированном качестве Full HD.",
+                    en: "The immortal masterpiece of world cinema in restored Full HD quality."
+                }
+            },
+            {
+                code: "114",
+                type: "movie",
+                category: "retro_movie",
+                year: "1985",
+                rating: "9.4",
+                quality: "1080p HD",
+                emoji: "🕰️",
+                posterBg: "linear-gradient(135deg, #78350f, #b45309, #f59e0b)",
+                title: {
+                    uz: "Kelajakka Qaytib (Retro Fantastika)",
+                    ru: "Назад в Будущее (Ретро)",
+                    en: "Back to the Future"
+                },
+                desc: {
+                    uz: "80-yillarning eng sevimli vaqt mashinasi sarguzashti!",
+                    ru: "Любимое приключение 80-х о путешествиях во времени на легендарном DeLorean!",
+                    en: "The iconic 80s time-travel adventure that defined a generation!"
+                }
+            },
+            // --- NATIONAL MOVIES (MILLIY KINOLAR) ---
+            {
+                code: "115",
+                type: "movie",
+                category: "national",
+                year: "2024",
+                rating: "9.5",
+                quality: "1080p HD",
+                emoji: "🇺🇿",
+                posterBg: "linear-gradient(135deg, #0c4a6e, #0284c7, #14b8a6)",
+                title: {
+                    uz: "Bahodir Yalangto'sh (Tarixiy Milliy Film)",
+                    ru: "Бахадыр Ялангтуш (Национальное Кино)",
+                    en: "Bahodir Yalangtush (Uzbek National)"
+                },
+                desc: {
+                    uz: "Samarqand Registonini bunyod etgan buyuk sarkarda haqidagi muhtasham o'zbek milliy filmi!",
+                    ru: "Масштабный узбекский исторический фильм о великом полководце и созидателе Регистана!",
+                    en: "Grand Uzbek historical epic about the legendary ruler and builder of Samarkand's Registan!"
+                }
+            },
+            {
+                code: "116",
+                type: "movie",
+                category: "national",
+                year: "1969",
+                rating: "9.8",
+                quality: "1080p HD",
+                emoji: "🏛️",
+                posterBg: "linear-gradient(135deg, #0f766e, #0ea5e9, #eab308)",
+                title: {
+                    uz: "O'tkan Kunlar (O'zbek Kino Durdonasi)",
+                    ru: "Минувшие Дни (Узбекская Классика)",
+                    en: "Bygone Days (Uzbek Masterpiece)"
+                },
+                desc: {
+                    uz: "Abdulla Qodiriyning o'lmas asari asosida suratga olingan Otabek va Kumush muhabbati dostoni.",
+                    ru: "Бессмертная экранизация романа Абдуллы Кадыри о великой любви Отабека и Кумуш.",
+                    en: "Timeless Uzbek cinematic treasure based on Abdulla Qodiriy's beloved novel."
+                }
+            },
+
+            // =====================================================
+            // MULTFILMLAR (CARTOONS - 3 SUB-CATEGORIES)
+            // =====================================================
+            // --- 1. YANGI MULTFILMLAR (new_cartoon) ---
+            {
+                code: "201",
+                type: "cartoon",
+                category: "new_cartoon",
+                year: "2024",
+                rating: "9.6",
+                quality: "1080p HD",
+                emoji: "🌈",
+                posterBg: "linear-gradient(135deg, #0ea5e9, #6366f1, #ec4899)",
+                title: {
+                    uz: "Boshqotirma 2 (Inside Out 2)",
+                    ru: "Головоломка 2 (Новинка)",
+                    en: "Inside Out 2"
+                },
+                desc: {
+                    uz: "Quvonch, G'am va yangi tuyg'ularning ajoyib va kulgili sarguzashtlari! Bolajonlar uchun eng zo'r yangi multfilm.",
+                    ru: "Новые невероятные и веселые приключения Радости, Печали и новых эмоций!",
+                    en: "Joy, Sadness, and brand-new emotions embark on a colorful, hilarious adventure!"
+                }
+            },
+            {
+                code: "202",
+                type: "cartoon",
+                category: "new_cartoon",
+                year: "2024",
+                rating: "9.4",
+                quality: "1080p HD",
+                emoji: "🐼",
+                posterBg: "linear-gradient(135deg, #f59e0b, #10b981, #0ea5e9)",
+                title: {
+                    uz: "Kung-Fu Panda 4 (Yangi Premyera)",
+                    ru: "Кунг-Фу Панда 4",
+                    en: "Kung Fu Panda 4"
+                },
+                desc: {
+                    uz: "Ajdarho jangchisi Po yangi do'stlari bilan Tinchlik vodiysini himoya qilishga otlanadi!",
+                    ru: "Воин Дракона По отправляется в новое веселое путешествие ради защиты Долины Мира!",
+                    en: "Po the Dragon Warrior teams up with new friends for a hilarious kung-fu quest!"
+                }
+            },
+            // --- 2. SERIALLI MULTFILMLAR (series_cartoon) ---
+            {
+                code: "203",
+                type: "cartoon",
+                category: "series_cartoon",
+                year: "2024",
+                rating: "9.5",
+                quality: "1080p HD",
+                emoji: "🐻",
+                posterBg: "linear-gradient(135deg, #d946ef, #ec4899, #f59e0b)",
+                title: {
+                    uz: "Masha va Ayiq (Barcha qismlar)",
+                    ru: "Маша и Медведь (Все серии)",
+                    en: "Masha and the Bear (Series)"
+                },
+                desc: {
+                    uz: "Sho'x Masha va mehribon Ayiqning kulgili sarguzashtlari — barcha qismlar jamlanmasi!",
+                    ru: "Веселые приключения озорной Маши и доброго Медведя — сборник лучших серий!",
+                    en: "Hilarious everyday adventures of little Masha and her kind friend the Bear!"
+                }
+            },
+            {
+                code: "204",
+                type: "cartoon",
+                category: "series_cartoon",
+                year: "2024",
+                rating: "9.3",
+                quality: "1080p HD",
+                emoji: "🐾",
+                posterBg: "linear-gradient(135deg, #3b82f6, #ef4444, #facc15)",
+                title: {
+                    uz: "Qutqaruvchilar Patruli (Multserial)",
+                    ru: "Щенячий Патруль (Мультсериал)",
+                    en: "PAW Patrol (Animated Series)"
+                },
+                desc: {
+                    uz: "Jasur kuchukchalar jamoasi har qanday yordamga doim tayyor! Ko'p qismli sevimli multserial.",
+                    ru: "Команда отважных щенков всегда готова прийти на помощь! Любимый детский мультсериал.",
+                    en: "Heroic pups led by Ryder work together on high-stakes rescue missions!"
+                }
+            },
+            // --- 3. RETRO MULTFILMLAR (retro_cartoon) ---
+            {
+                code: "205",
+                type: "cartoon",
+                category: "retro_cartoon",
+                year: "1994",
+                rating: "9.8",
+                quality: "1080p HD",
+                emoji: "🦁",
+                posterBg: "linear-gradient(135deg, #d97706, #ea580c, #facc15)",
+                title: {
+                    uz: "Qirol Sher (Oltin Retro Multfilm)",
+                    ru: "Король Лев (Золотая Классика)",
+                    en: "The Lion King (Classic)"
+                },
+                desc: {
+                    uz: "Yosh Simbaning haqiqiy qirol bo'lish yo'lidagi unutilmas va afsonaviy sarguzashti.",
+                    ru: "Легендарный шедевр Disney о приключениях львенка Симбы на пути к трону.",
+                    en: "Disney's timeless animated masterpiece of young Simba's journey to become King."
+                }
+            },
+            {
+                code: "206",
+                type: "cartoon",
+                category: "retro_cartoon",
+                year: "1965",
+                rating: "9.7",
+                quality: "1080p HD",
+                emoji: "🧀",
+                posterBg: "linear-gradient(135deg, #f59e0b, #ef4444, #3b82f6)",
+                title: {
+                    uz: "Tom va Jerri (Oltin To'plam)",
+                    ru: "Том и Джерри (Золотая Коллекция)",
+                    en: "Tom and Jerry (Golden Collection)"
+                },
+                desc: {
+                    uz: "Barcha zamonlarning eng quvnoq mushuk va sichqon quvlashmachog'i!",
+                    ru: "Самая смешная классика всех времен о приключениях кота Тома и мышонка Джерри!",
+                    en: "The funniest classic cat-and-mouse slapstick adventures of all time!"
+                }
+            }
+        ];
+
+        // =========================================================
+        // STATE MANAGEMENT
+        // =========================================================
+        let currentLang = urlParams.get('lang') || localStorage.getItem('movitime_lang') || 'uz';
+        if (!['uz', 'ru', 'en'].includes(currentLang)) currentLang = 'uz';
+
+        let currentTab = urlParams.get('tab') || 'home'; // 'home' | 'movies' | 'cartoons' | 'saved'
+        let currentCategory = urlParams.get('cat') || 'all';
+        let savedCodes = JSON.parse(localStorage.getItem('movitime_saved') || '[]');
+
+        const MOVIE_CAT_KEYS = ['all', 'series', 'family', 'scifi', 'action', 'drama', 'anime', 'sport', 'retro_movie', 'national'];
+        const CARTOON_CAT_KEYS = ['all', 'new_cartoon', 'series_cartoon', 'retro_cartoon'];
+
+        // =========================================================
+        // LANGUAGE & THEME ENGINE
+        // =========================================================
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('movitime_lang', lang);
+
+            ['uz', 'ru', 'en'].forEach(l => {
+                const btn = document.getElementById('langBtn_' + l);
+                if (btn) btn.classList.toggle('active', l === lang);
+            });
+
+            const t = I18N[lang];
+            document.getElementById('brandSubtitle').textContent = t.subtitle;
+            document.getElementById('searchInput').placeholder = t.searchPlaceholder;
+            document.getElementById('quickCodeBtn').innerHTML = `🔢 <span>${t.codeBtn}</span>`;
+            document.getElementById('navLabel_home').textContent = t.navHome;
+            document.getElementById('navLabel_movies').textContent = t.navMovies;
+            document.getElementById('navLabel_cartoons').textContent = t.navCartoons;
+            document.getElementById('navLabel_saved').textContent = t.navSaved;
+
+            document.getElementById('codeModalTitle').textContent = t.codeModalTitle;
+            document.getElementById('codeModalSub').textContent = t.codeModalSub;
+            document.getElementById('codeModalWatchBtn').textContent = t.openInBotBtn;
+            document.getElementById('codeModalCancelBtn').textContent = t.closeBtn;
+
+            renderApp();
+        }
+
+        function getActiveThemeConfig() {
+            if (currentTab === 'cartoons') {
+                if (currentCategory !== 'all' && CATEGORY_THEMES[currentCategory]) {
+                    return CATEGORY_THEMES[currentCategory];
+                }
+                return CATEGORY_THEMES.all_cartoons;
+            }
+            if (currentTab === 'movies') {
+                if (currentCategory !== 'all' && CATEGORY_THEMES[currentCategory]) {
+                    return CATEGORY_THEMES[currentCategory];
+                }
+                return CATEGORY_THEMES.all_movies;
+            }
+            return CATEGORY_THEMES.home;
+        }
+
+        function applyVisualTheme() {
+            const theme = getActiveThemeConfig();
+            const body = document.body;
+            const root = document.documentElement;
+
+            body.setAttribute('data-tab', currentTab);
+            body.setAttribute('data-cat', currentCategory);
+
+            // Toggle Kids Wonderland Mode for Cartoons
+            if (currentTab === 'cartoons' || theme.kids) {
+                body.classList.add('kids-mode');
+                root.style.setProperty('--bg-main', '#fffdf5');
+                root.style.setProperty('--bg-card', '#ffffff');
+                root.style.setProperty('--accent-1', theme.accent1);
+                root.style.setProperty('--accent-2', theme.accent2);
+                root.style.setProperty('--accent-gradient', theme.gradient);
+                root.style.setProperty('--banner-gradient', theme.bannerGradient);
+                document.getElementById('brandLogo').textContent = '🧸';
+            } else {
+                body.classList.remove('kids-mode');
+                root.style.setProperty('--bg-main', theme.bgMain || '#080c16');
+                root.style.setProperty('--bg-card', theme.bgCard || 'rgba(23, 33, 53, 0.88)');
+                root.style.setProperty('--accent-1', theme.accent1);
+                root.style.setProperty('--accent-2', theme.accent2);
+                root.style.setProperty('--accent-gradient', theme.gradient);
+                root.style.setProperty('--banner-gradient', theme.bannerGradient);
+                document.getElementById('brandLogo').textContent = theme.icon || '🎬';
+            }
+
+            // Render floating thematic emojis
+            const decContainer = document.getElementById('themeDecorations');
+            const emojis = theme.emojis || ['🎬', '✨'];
+            let html = '';
+            const positions = [
+                { top: '14%', left: '6%', delay: '0s' },
+                { top: '26%', right: '8%', delay: '1.5s' },
+                { top: '52%', left: '4%', delay: '3s' },
+                { top: '68%', right: '6%', delay: '2s' },
+                { top: '84%', left: '12%', delay: '4s' }
+            ];
+            positions.forEach((pos, idx) => {
+                const em = emojis[idx % emojis.length];
+                const style = `top:${pos.top};${pos.left ? 'left:'+pos.left : 'right:'+pos.right};animation-delay:${pos.delay};`;
+                html += `<div class="floating-emoji" style="${style}">${em}</div>`;
+            });
+            decContainer.innerHTML = html;
+        }
+
+        // =========================================================
+        // NAVIGATION & FILTERING
+        // =========================================================
+        function switchTab(tab, cat = 'all') {
+            currentTab = tab;
+            currentCategory = cat;
+            document.getElementById('searchInput').value = '';
+
+            ['home', 'movies', 'cartoons', 'saved'].forEach(id => {
+                const navEl = document.getElementById('nav_' + id);
+                if (navEl) navEl.classList.toggle('active', id === tab);
+            });
+
+            applyVisualTheme();
+            renderApp();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function selectCategory(cat) {
+            currentCategory = cat;
+            applyVisualTheme();
+            renderApp();
+        }
+
+        function handleSearch() {
+            renderApp();
+        }
+
+        // =========================================================
+        // MAIN RENDER FUNCTION
+        // =========================================================
+        function renderApp() {
+            const container = document.getElementById('appContent');
+            const t = I18N[currentLang];
+            const theme = getActiveThemeConfig();
+            const query = document.getElementById('searchInput').value.trim().toLowerCase().replace(/^#/, '');
+
+            // If user typed in search bar, show instant search results across everything
+            if (query.length > 0) {
+                const matches = CATALOG.filter(item => {
+                    const titleMatch = item.title[currentLang].toLowerCase().includes(query) ||
+                                       item.title.uz.toLowerCase().includes(query) ||
+                                       item.title.ru.toLowerCase().includes(query) ||
+                                       item.title.en.toLowerCase().includes(query);
+                    const codeMatch = item.code.toLowerCase().includes(query);
+                    const catMatch = item.category.toLowerCase().includes(query);
+                    return titleMatch || codeMatch || catMatch;
+                });
+
+                let html = `
+                    <div class="section-heading">
+                        <h3>🔍 "${query}"</h3>
+                        <span class="count-pill">${matches.length} ${t.itemsCount}</span>
+                    </div>
+                `;
+
+                if (matches.length > 0) {
+                    html += `<div class="movies-grid">${matches.map(renderMovieCard).join('')}</div>`;
+                } else {
+                    html += `
+                        <div class="empty-state">
+                            <div class="empty-icon">🔢</div>
+                            <h4 style="margin-bottom:6px;">#${query}</h4>
+                            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;">
+                                Ushbu kodni to'g'ridan-to'g'ri Telegram botimiz orqali ochishingiz mumkin:
+                            </p>
+                            <button class="btn-primary-watch" onclick="watchInBot('${query}')">
+                                ${t.openInBotBtn} (#${query})
+                            </button>
+                        </div>
+                    `;
+                }
+                container.innerHTML = html;
+                return;
+            }
+
+            // 1. SAVED TAB
+            if (currentTab === 'saved') {
+                const savedItems = CATALOG.filter(i => savedCodes.includes(i.code));
+                let html = `
+                    <div class="profile-card">
+                        <div class="profile-avatar">🎬</div>
+                        <div>
+                            <div style="font-size:16px;font-weight:800;">MOVITIMECN VIP</div>
+                            <div style="font-size:12px;color:var(--text-secondary);">@movitimecn • Full HD 1080p</div>
+                        </div>
+                    </div>
+                    <div class="section-heading">
+                        <h3>${t.savedTitle}</h3>
+                        <span class="count-pill">${savedItems.length} ${t.itemsCount}</span>
+                    </div>
+                `;
+                if (savedItems.length > 0) {
+                    html += `<div class="movies-grid">${savedItems.map(renderMovieCard).join('')}</div>`;
+                } else {
+                    html += `
+                        <div class="empty-state">
+                            <div class="empty-icon">❤️</div>
+                            <p style="font-size:13.5px;color:var(--text-secondary);">${t.savedEmpty}</p>
+                        </div>
+                    `;
+                }
+                container.innerHTML = html;
+                return;
+            }
+
+            // 2. HERO BANNER (Dynamic per Tab & Category)
+            const badgeText = (currentTab === 'cartoons' || theme.kids) ? t.kidsBadge : t.cinemaBadge;
+            let html = `
+                <div class="category-hero">
+                    <div class="hero-badge">${badgeText}</div>
+                    <div class="hero-main-row">
+                        <div class="hero-text">
+                            <h2>${theme.title[currentLang]}</h2>
+                            <p>${theme.desc[currentLang]}</p>
+                        </div>
+                        <div class="hero-big-icon">${theme.icon}</div>
+                    </div>
+                </div>
+            `;
+
+            // 3. HOME TAB CONTENT
+            if (currentTab === 'home') {
+                // Dual Portals: Movies vs Kids Cartoons
+                html += `
+                    <div class="main-portals">
+                        <div class="portal-card portal-movies" onclick="switchTab('movies', 'all')">
+                            <span class="portal-icon">🎬</span>
+                            <div class="portal-title">${t.portalMoviesTitle}</div>
+                            <div class="portal-sub">${t.portalMoviesSub}</div>
+                        </div>
+                        <div class="portal-card portal-cartoons" onclick="switchTab('cartoons', 'all')">
+                            <span class="portal-icon">🧸</span>
+                            <div class="portal-title">${t.portalCartoonsTitle}</div>
+                            <div class="portal-sub">${t.portalCartoonsSub}</div>
+                        </div>
+                    </div>
+                `;
+
+                // Quick Movie Categories Bento Preview
+                html += `
+                    <div class="strip-header">
+                        <div class="strip-title">${t.chooseMovieGenre}</div>
+                    </div>
+                    <div class="genre-bento-grid">
+                        ${MOVIE_CAT_KEYS.filter(k => k !== 'all').map(k => {
+                            const ct = CATEGORY_THEMES[k];
+                            return `
+                                <div class="genre-bento-card" style="background:${ct.bannerGradient};" onclick="switchTab('movies', '${k}')">
+                                    <span class="genre-bento-emoji">${ct.icon}</span>
+                                    <span class="genre-bento-name">${ct.title[currentLang]}</span>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+
+                // Quick Cartoon Categories Bento Preview
+                html += `
+                    <div class="strip-header">
+                        <div class="strip-title">${t.chooseCartoonGenre}</div>
+                    </div>
+                    <div class="genre-bento-grid">
+                        ${CARTOON_CAT_KEYS.filter(k => k !== 'all').map(k => {
+                            const ct = CATEGORY_THEMES[k];
+                            return `
+                                <div class="genre-bento-card" style="background:${ct.bannerGradient};" onclick="switchTab('cartoons', '${k}')">
+                                    <span class="genre-bento-emoji">${ct.icon}</span>
+                                    <span class="genre-bento-name">${ct.title[currentLang]}</span>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+
+                // Featured Movies & Cartoons
+                html += `
+                    <div class="section-heading">
+                        <h3>${t.popularNow}</h3>
+                        <span class="count-pill">${CATALOG.length} ${t.itemsCount}</span>
+                    </div>
+                    <div class="movies-grid">
+                        ${CATALOG.map(renderMovieCard).join('')}
+                    </div>
+                `;
+
+                container.innerHTML = html;
+                return;
+            }
+
+            // 4. MOVIES TAB OR CARTOONS TAB
+            const isMovies = currentTab === 'movies';
+            const catKeys = isMovies ? MOVIE_CAT_KEYS : CARTOON_CAT_KEYS;
+
+            // Horizontal Scrollable Chips
+            html += `
+                <div class="categories-strip-wrap">
+                    <div class="strip-header">
+                        <div class="strip-title">${isMovies ? t.chooseMovieGenre : t.chooseCartoonGenre}</div>
+                    </div>
+                    <div class="categories-scroll">
+                        ${catKeys.map(k => {
+                            const isAll = k === 'all';
+                            const label = isAll ? (isMovies ? t.allMovies : t.allCartoons) : CATEGORY_THEMES[k].title[currentLang];
+                            const icon = isAll ? (isMovies ? '🎬' : '🌈') : CATEGORY_THEMES[k].icon;
+                            const activeClass = currentCategory === k ? 'active' : '';
+                            return `
+                                <button class="cat-chip ${activeClass}" onclick="selectCategory('${k}')">
+                                    <span class="chip-emoji">${icon}</span>
+                                    <span>${label}</span>
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+
+            // Visual Bento Grid of Subcategories
+            html += `
+                <div class="genre-bento-grid">
+                    ${catKeys.filter(k => k !== 'all').map(k => {
+                        const ct = CATEGORY_THEMES[k];
+                        const selClass = currentCategory === k ? 'selected-bento' : '';
+                        return `
+                            <div class="genre-bento-card ${selClass}" style="background:${ct.bannerGradient};" onclick="selectCategory('${k}')">
+                                <span class="genre-bento-emoji">${ct.icon}</span>
+                                <span class="genre-bento-name">${ct.title[currentLang]}</span>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+
+            // Filtered Items
+            const filtered = CATALOG.filter(item => {
+                if (isMovies && item.type !== 'movie') return false;
+                if (!isMovies && item.type !== 'cartoon') return false;
+                if (currentCategory !== 'all' && item.category !== currentCategory) return false;
+                return true;
+            });
+
+            const headingTitle = currentCategory === 'all'
+                ? (isMovies ? CATEGORY_THEMES.all_movies.title[currentLang] : CATEGORY_THEMES.all_cartoons.title[currentLang])
+                : `${CATEGORY_THEMES[currentCategory].icon} ${CATEGORY_THEMES[currentCategory].title[currentLang]}`;
+
+            html += `
+                <div class="section-heading">
+                    <h3>${headingTitle}</h3>
+                    <span class="count-pill">${filtered.length} ${t.itemsCount}</span>
+                </div>
+                <div class="movies-grid">
+                    ${filtered.map(renderMovieCard).join('')}
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // =========================================================
+        // CARD RENDERER
+        // =========================================================
+        function renderMovieCard(item) {
+            const t = I18N[currentLang];
+            const catTheme = CATEGORY_THEMES[item.category] || CATEGORY_THEMES.home;
+            const isSaved = savedCodes.includes(item.code);
+
+            return `
+                <div class="movie-card" onclick="openDetailModal('${item.code}')">
+                    <div class="movie-poster" style="background: ${item.posterBg};">
+                        <span class="poster-code-tag">#${item.code}</span>
+                        <span class="poster-rating-tag">⭐ ${item.rating}</span>
+                        <div class="poster-art-emoji">${item.emoji}</div>
+                        <button class="fav-heart-btn" onclick="event.stopPropagation(); toggleSave('${item.code}')">
+                            ${isSaved ? '❤️' : '🤍'}
+                        </button>
+                        <span class="poster-quality-tag">${item.quality}</span>
+                    </div>
+                    <div class="movie-info">
+                        <div>
+                            <div class="movie-title">${item.title[currentLang]}</div>
+                            <div class="movie-meta">
+                                <span>${catTheme.icon} ${catTheme.title[currentLang]}</span>
+                                <span>${item.year}</span>
+                            </div>
+                        </div>
+                        <button class="watch-card-btn" onclick="event.stopPropagation(); watchInBot('${item.code}')">
+                            ▶️ ${t.watchBtn}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // =========================================================
+        // MODALS & BOT ACTIONS
+        // =========================================================
+        function openDetailModal(code) {
+            const item = CATALOG.find(i => i.code === code);
+            if (!item) return;
+
+            const t = I18N[currentLang];
+            const catTheme = CATEGORY_THEMES[item.category] || CATEGORY_THEMES.home;
+            const sheet = document.getElementById('detailSheetContent');
+
+            sheet.innerHTML = `
+                <div class="modal-handle"></div>
+                <div class="detail-banner" style="background: ${item.posterBg};">
+                    <span>${item.emoji}</span>
+                    <span class="detail-code-pill">🔢 ${t.codeLabel}: #${item.code}</span>
+                </div>
+                <div class="detail-title">${item.title[currentLang]}</div>
+                <div class="detail-tags">
+                    <span class="detail-tag">${catTheme.icon} ${catTheme.title[currentLang]}</span>
+                    <span class="detail-tag">⭐ ${item.rating}</span>
+                    <span class="detail-tag">📅 ${item.year}</span>
+                    <span class="detail-tag">💎 ${item.quality}</span>
+                </div>
+                <p class="detail-desc">${item.desc[currentLang]}</p>
+                <div class="detail-actions">
+                    <button class="btn-primary-watch" onclick="watchInBot('${item.code}')">
+                        ${t.openInBotBtn} (#${item.code})
+                    </button>
+                    <div class="btn-secondary-row">
+                        <button class="btn-outline" onclick="copyMovieCode('${item.code}')">
+                            ${t.copyCodeBtn}
+                        </button>
+                        <button class="btn-outline" onclick="closeDetailModal()">
+                            ${t.closeBtn}
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('detailModal').classList.add('open');
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.remove('open');
+        }
+
+        function openCodeModal() {
+            document.getElementById('customCodeInput').value = '';
+            document.getElementById('codeModal').classList.add('open');
+            setTimeout(() => document.getElementById('customCodeInput').focus(), 150);
+        }
+
+        function closeCodeModal() {
+            document.getElementById('codeModal').classList.remove('open');
+        }
+
+        function submitCustomCode() {
+            const val = document.getElementById('customCodeInput').value.trim().replace(/^#/, '');
+            if (!val) return;
+            closeCodeModal();
+            watchInBot(val);
+        }
+
+        function copyMovieCode(code) {
+            const t = I18N[currentLang];
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(code).catch(() => {});
+            }
+            showToast(t.codeCopied + code);
+        }
+
+        function toggleSave(code) {
+            if (savedCodes.includes(code)) {
+                savedCodes = savedCodes.filter(c => c !== code);
+            } else {
+                savedCodes.push(code);
+            }
+            localStorage.setItem('movitime_saved', JSON.stringify(savedCodes));
+            renderApp();
+        }
+
+        function watchInBot(code) {
+            const t = I18N[currentLang];
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(code).catch(() => {});
+            }
+            showToast(t.sendingToBot + code);
+
+            // 1. Try Telegram WebApp sendData (works when opened via Reply Keyboard WebApp button)
+            if (tg && tg.sendData) {
+                try {
+                    tg.sendData(JSON.stringify({ code: code, lang: currentLang }));
+                } catch (e) {}
+            }
+
+            // 2. Also support deep-linking via openTelegramLink (works when opened via Inline Keyboard WebApp button)
+            if (tg && tg.openTelegramLink && botUsername) {
+                setTimeout(() => {
+                    tg.openTelegramLink(`https://t.me/${botUsername}?start=watch_${code}`);
+                    if (tg.close) tg.close();
+                }, 350);
+            }
+        }
+
+        function showToast(msg) {
+            const box = document.getElementById('toastBox');
+            box.textContent = msg;
+            box.classList.add('show');
+            setTimeout(() => box.classList.remove('show'), 2400);
+        }
+
+        // =========================================================
+        // INITIALIZE ON LOAD
+        // =========================================================
+        applyVisualTheme();
+        setLanguage(currentLang);
+        switchTab(currentTab, currentCategory);
     </script>
 </body>
 </html>

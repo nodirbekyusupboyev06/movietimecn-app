@@ -18,8 +18,8 @@ from aiogram.fsm.storage.memory import MemoryStorage
 # ==========================================
 # SOZLAMALAR VA XAVFSIZ TOKEN (ANTI-STEAL)
 # ==========================================
-# GitHub'ga yuklanganda A_TOOLSx2 kabi bot-o'g'rilari tokenni o'g'irlay olmasligi uchun
-# token XOR-shifrlangan holatda yoki .env / BOT_TOKEN o'zgaruvchisida saqlanadi.
+# GitHub'ga yuklanganda tokenni o'g'irlay olmasliklari uchun
+# token XOR-shifrlangan holda zaxirada saqlanadi yoki BOT_TOKEN o'zgaruvchisidan olinadi.
 _ENC_TOKEN = "62626d6c6c6e6e6e636c601b1b1f296c3e29383d69631b0e2935356877130a1500112e200515353b3e0836130e62"
 
 
@@ -32,9 +32,12 @@ def decode_token(hex_str: str) -> str:
 
 
 def load_bot_token() -> str:
+    # 1. Render muhit o'zgaruvchisidan olish
     env_tok = os.environ.get("BOT_TOKEN", "").strip()
     if env_tok:
         return env_tok
+    
+    # 2. .env fayl mavjud bo'lsa, undan o'qish
     if os.path.exists(".env"):
         try:
             with open(".env", "r", encoding="utf-8") as f:
@@ -46,11 +49,14 @@ def load_bot_token() -> str:
                             return val
         except Exception:
             pass
+            
+    # 3. Zaxira shifrlangan tokenni ochish
     return decode_token(_ENC_TOKEN)
 
 
 API_TOKEN = load_bot_token()
 ADMIN_ID = 7679905644
+
 
 # GitHub Pages yoki Render 24/7 server orqali Mini App havolasi
 WEBAPP_URL = os.environ.get("RENDER_EXTERNAL_URL") or 'https://nodirbekyusupboyev06.github.io/movietimecn-app/'
